@@ -178,6 +178,11 @@ module.exports = {
       url: `https://rpc.ankr.com/fantom_testnet`,
       chainId: 4002,
       accounts: accounts(),
+    },
+    'beam-testnet': {
+      url: `https://subnets.avax.network/beam/testnet/rpc`,
+      chainId: 13337,
+      accounts: accounts(),
     }
   }
 };

@@ -41,17 +41,18 @@ If the decimal point is 18, then uint64 can only represent approximately 18 toke
 
 1. Deploy two contracts:
 ```angular2html
-npx hardhat --network goerli deploy --tags ExampleOFTV2
-npx hardhat --network fuji deploy --tags ExampleOFTV2
+npx hardhat --network goerli deploy --tags ProxyOFTV2
+npx hardhat --network beam-testnet deploy --tags NativeOFTV2
 ```
 2. Set the "trusted remotes" (ie: your contracts) so each of them can receive messages from one another, and `only` one another.
 ```angular2html
-npx hardhat --network goerli setTrustedRemote --target-network fuji --contract ExampleOFTV2
-npx hardhat --network fuji setTrustedRemote --target-network goerli --contract ExampleOFTV2
+npx hardhat --network goerli setTrustedRemote --target-network beam-testnet --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
+npx hardhat --network beam-testnet setTrustedRemote --target-network goerli --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
 ```
 3. Send tokens from goerli to fuji
 ```angular2html
-npx hardhat --network goerli oftv2Send --target-network fuji --qty 42 --contract ExampleOFTV2
+npx hardhat --network goerli oftv2Send --target-network beam-testnet --qty 10 --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
+npx hardhat --network beam-testnet oftv2Send --target-network goerli --qty 1 --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
 ```
  Pro-tip: Check the ERC20 transactions tab of the destination chain block explorer and await your tokens!
 
