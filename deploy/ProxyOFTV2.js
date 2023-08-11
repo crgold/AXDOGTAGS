@@ -8,7 +8,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     const lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     console.log(`[${hre.network.name}] Endpoint Address: ${lzEndpointAddress}`)
-    const tokenAddress = "0xFAA66A5eb020D689438d2b63116885Dc84B44cd5";
+    const tokenAddress = "0x955723e26bd1b2165391BCaf39A92f77b30FFe01";
     const sharedDecimals = 6;
 
     await deploy("ProxyOFTV2", {

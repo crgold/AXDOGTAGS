@@ -30,10 +30,13 @@ module.exports = async function (taskArgs, hre) {
     const localContractInstance = await ethers.getContract(localContract)
 
     // quote fee with default adapterParams
-    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]) // default adapterParams example
+    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 500000]) // default adapterParams example
 
     let fees = await localContractInstance.estimateSendFee(remoteChainId, toAddressBytes, qty, false, adapterParams)
     console.log(`fees[0] (wei): ${fees[0]} / (eth): ${ethers.utils.formatEther(fees[0])}`)
+
+    // for native tokens, we need to add them on top of the fees in msg.value
+    let value = localContract == "NativeOFTV2" ? qty.add(fees[0]) : fees[0]
 
     let tx = await (
         await localContractInstance.sendFrom(
@@ -41,8 +44,8 @@ module.exports = async function (taskArgs, hre) {
             remoteChainId,                 // remote LayerZero chainId
             toAddressBytes,                     // 'to' address to send tokens
             qty,                           // amount of tokens to send (in wei)
-            [owner.address, ethers.constants.AddressZero, "0x"],
-            { value: fees[0] }
+            [owner.address, ethers.constants.AddressZero, adapterParams],
+            { value }
         )
     ).wait()
     console.log(`✅ Message Sent [${hre.network.name}] sendTokens() to OFT @ LZ chainId[${remoteChainId}] token:[${toAddress}]`)
