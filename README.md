@@ -49,13 +49,16 @@ npx hardhat --network beam-testnet deploy --tags NativeOFTV2
 npx hardhat --network fuji setTrustedRemote --target-network beam-testnet --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
 npx hardhat --network beam-testnet setTrustedRemote --target-network fuji --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
 ```
+4. Call `setUseCustomAdapterParams(true)` on both contracts
+5. Set `setMinDstGas` on both contracts. `packetType` is `0`. Beam seems to work with 500k gas set (on the Fuji contract).
+6. Send funds to  using the **deposit** call (or give NativeProxyOFTV2 permission to mint via NativeMinter precompile)
+7. Give ProxyOFTV2 allowance for tokens on Fuji
+
 3. Send tokens from fuji to beam
 ```angular2html
 npx hardhat --network fuji oftv2Send --target-network beam-testnet --qty 10 --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
 npx hardhat --network beam-testnet oftv2Send --target-network fuji --qty 5 --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
 ```
-4. Call `setUseCustomAdapterParams(true)` on both contracts
-5. Set `setMinDstGas` on both contracts. `packetType` is `0`.
 
  Pro-tip: Check the ERC20 transactions tab of the destination chain block explorer and await your tokens! It takes about 30-45min.
 
