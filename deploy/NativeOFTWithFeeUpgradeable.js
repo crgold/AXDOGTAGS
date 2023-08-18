@@ -14,10 +14,10 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     }
 
     const sharedDecimals = 6;
-    const name = "Merit Circle";
-    const symbol = "MC";
+    const name = "LayerZero Merit Circle";
+    const symbol = "LZMC";
 
-    await deploy("NativeOFTV2Upgradeable", {
+    await deploy("NativeOFTWithFeeUpgradeable", {
         from: deployer,
         log: true,
         waitConfirmations: 1,
@@ -34,4 +34,4 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     })
 }
 
-module.exports.tags = ["NativeOFTV2Upgradeable"]
+module.exports.tags = ["NativeOFTWithFeeUpgradeable"]

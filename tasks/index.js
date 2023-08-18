@@ -150,6 +150,10 @@ task("setMinDstGas", "set min gas required on the destination gas", require("./s
     .addParam("minGas", "min gas")
 
 //
+task("setCustomAdapterParams", "enable custom adapter params", require("./setCustomAdapterParams"))
+.addParam("contract", "contract name")
+
+//
 task("incrementCounter", "increment the destination OmniCounter", require("./incrementCounter"))
     .addParam("targetNetwork", "the target network name, ie: fuji, or mumbai, etc (from hardhat.config.js)")
 

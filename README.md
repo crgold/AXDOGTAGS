@@ -41,26 +41,38 @@ If the decimal point is 18, then uint64 can only represent approximately 18 toke
 
 1. Deploy two contracts:
 ```angular2html
-npx hardhat --network fuji deploy --tags ProxyOFTV2
-npx hardhat --network beam-testnet deploy --tags NativeOFTV2
+npx hardhat --network fuji deploy --tags ProxyOFTWithFeeUpgradeable
+npx hardhat --network beam-testnet deploy --tags NativeOFTWithFeeUpgradeable
 ```
 2. Set the "trusted remotes" (ie: your contracts) so each of them can receive messages from one another, and `only` one another.
 ```angular2html
-npx hardhat --network fuji setTrustedRemote --target-network beam-testnet --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
-npx hardhat --network beam-testnet setTrustedRemote --target-network fuji --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
+npx hardhat --network fuji setTrustedRemote --target-network beam-testnet --local-contract ProxyOFTWithFeeUpgradeable --remote-contract NativeOFTWithFeeUpgradeable
+npx hardhat --network beam-testnet setTrustedRemote --target-network fuji --local-contract NativeOFTWithFeeUpgradeable --remote-contract ProxyOFTWithFeeUpgradeable
 ```
 4. Call `setUseCustomAdapterParams(true)` on both contracts
-5. Set `setMinDstGas` on both contracts. `packetType` is `0`. Beam seems to work with 500k gas set (on the Fuji contract).
-6. Send funds to  using the **deposit** call (or give NativeProxyOFTV2 permission to mint via NativeMinter precompile)
-7. Give ProxyOFTV2 allowance for tokens on Fuji
-
-3. Send tokens from fuji to beam
 ```angular2html
-npx hardhat --network fuji oftv2Send --target-network beam-testnet --qty 10 --local-contract ProxyOFTV2 --remote-contract NativeOFTV2
-npx hardhat --network beam-testnet oftv2Send --target-network fuji --qty 5 --local-contract NativeOFTV2 --remote-contract ProxyOFTV2
+npx hardhat --network fuji setCustomAdapterParams --contract ProxyOFTWithFeeUpgradeable
+npx hardhat --network beam-testnet setCustomAdapterParams --contract NativeOFTWithFeeUpgradeable
 ```
 
- Pro-tip: Check the ERC20 transactions tab of the destination chain block explorer and await your tokens! It takes about 30-45min.
+5. Set `setMinDstGas` on both contracts. `packetType` is `0`. Beam seems to work well with 500k gas set (on the Fuji contract).
+```angular2html
+npx hardhat --network fuji setMinDstGas --target-network beam-testnet --min-gas 500000 --packet-type 0 --contract ProxyOFTWithFeeUpgradeable
+npx hardhat --network beam-testnet setMinDstGas --target-network fuji --min-gas 200000 --packet-type 0 --contract NativeOFTWithFeeUpgradeable
+```
+
+6. Send funds to NativeOFTV2 using the **deposit** call. Then send the ERC20 tokens you just minted in the process to the contract too.
+  - (or give NativeProxyOFTV2 permission to mint via NativeMinter precompile)
+
+7. Give ProxyOFTV2 allowance for the (non-OFT) ERC20 tokens to transfer on Fuji
+
+3. Send tokens from fuji to beam and back
+```angular2html
+npx hardhat --network fuji oftv2Send --target-network beam-testnet --qty 10 --local-contract ProxyOFTWithFeeUpgradeable --remote-contract NativeOFTWithFeeUpgradeable
+npx hardhat --network beam-testnet oftv2Send --target-network fuji --qty 5 --local-contract NativeOFTWithFeeUpgradeable --remote-contract ProxyOFTWithFeeUpgradeable
+```
+
+ Pro-tip: Check the ERC20 transactions tab of the destination chain block explorer and await your tokens! It may take up to 30-60min.
 
 # OmnichainNonFungibleToken721 (ONFT721)
 

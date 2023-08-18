@@ -13,20 +13,20 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
         lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     }
 
+    // MC Token address
     const TOKEN_ADDRESS_BY_NETWORK = {
-        beam: "0x949D48EcA67b17269629c7194F4b727d4Ef9E5d6",
-        "beam-testnet": "0x955723e26bd1b2165391BCaf39A92f77b30FFe01",
+        ethereum: "0x949D48EcA67b17269629c7194F4b727d4Ef9E5d6",
+        fuji: "0x955723e26bd1b2165391BCaf39A92f77b30FFe01",
     }
-
-    const tokenAddress = TOKEN_ADDRESS_BY_NETWORK[hre.network.name];
-    const sharedDecimals = 6;
+    const tokenAddress = TOKEN_ADDRESS_BY_NETWORK[hre.network.name]
+    const sharedDecimals = 6
 
     if (!tokenAddress) {
-        console.error("No token address found for target network.")
+        console.error("No configured token address found for target network.")
         return
     }
 
-    await deploy("ProxyOFTV2Upgradeable", {
+    await deploy("ProxyOFTWithFeeUpgradeable", {
         from: deployer,
         log: true,
         waitConfirmations: 1,
@@ -43,4 +43,4 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     })
 }
 
-module.exports.tags = ["ProxyOFTV2Upgradeable"]
+module.exports.tags = ["ProxyOFTWithFeeUpgradeable"]
