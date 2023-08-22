@@ -94,7 +94,7 @@ module.exports = {
       default: 0,    // wallet address 0, of the mnemonic in .env
     },
     proxyOwner: {
-      default: 1,
+      default: process.env.PROXY_OWNER_ADDRESS || 1,
     },
   },
 
