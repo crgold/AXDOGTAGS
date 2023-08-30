@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
-import "./BaseOFTV2Upgradeable.sol";
+import "../fee/BaseOFTWithFeeUpgradeable.sol";
 
 /**
  * This contract is based on "NativeOFTV2" and "ProxyOFTV2", and takes advantage of
@@ -17,7 +17,7 @@ interface INativeMinter {
   function mintNativeCoin(address addr, uint256 amount) external;
 }
 
-contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Proxied {
+contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, Proxied {
     uint internal ld2sdRate;
     uint internal supply;
     INativeMinter internal constant nativeMinter = INativeMinter(address(0x0200000000000000000000000000000000000001));
@@ -28,9 +28,9 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
     }
 
     function initialize(uint8 _nativeDecimals, uint8 _sharedDecimals, address _lzEndpoint) public initializer {
-        __BaseOFTV2Upgradeable_init(_sharedDecimals, _lzEndpoint);
+        __BaseOFTWithFeeUpgradeable_init(_sharedDecimals, _lzEndpoint);
 
-        require(_sharedDecimals <= _nativeDecimals, "NativeMinterOFTV2: sharedDecimals must be <= nativeDecimals");
+        require(_sharedDecimals <= _nativeDecimals, "NativeProxyOFTWithFee: sharedDecimals must be <= nativeDecimals");
         ld2sdRate = 10 ** (_nativeDecimals - _sharedDecimals);
     }
 
@@ -41,12 +41,10 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
     /************************************************************************
     * public functions
     ************************************************************************/
-    function sendFrom(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, LzCallParams calldata _callParams) public payable virtual override {
-        _send(_from, _dstChainId, _toAddress, _amount, _callParams.refundAddress, _callParams.zroPaymentAddress, _callParams.adapterParams);
-    }
-
-    function sendAndCall(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, bytes calldata _payload, uint64 _dstGasForCall, LzCallParams calldata _callParams) public payable virtual override {
-        _sendAndCall(_from, _dstChainId, _toAddress, _amount, _payload, _dstGasForCall, _callParams.refundAddress, _callParams.zroPaymentAddress, _callParams.adapterParams);
+    // set to 0x0 to burn fee instead
+    function setFeeOwner(address _feeOwner) public virtual override onlyOwner {
+        feeOwner = _feeOwner;
+        emit SetFeeOwner(_feeOwner);
     }
 
     function token() public view virtual override returns (address) {
@@ -64,8 +62,8 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         _checkAdapterParams(_dstChainId, PT_SEND, _adapterParams, NO_EXTRA_GAS);
 
         (amount,) = _removeDust(_amount);
-        require(amount > 0, "NativeMinterOFTV2: amount too small");
-        uint messageFee = _debitFrom(amount);
+        require(amount > 0, "NativeProxyOFTWithFee: amount too small");
+        uint messageFee = _debitFromNative(amount);
 
         bytes memory lzPayload = _encodeSendPayload(_toAddress, _ld2sd(amount));
         _lzSend(_dstChainId, lzPayload, _refundAddress, _zroPaymentAddress, _adapterParams, messageFee);
@@ -77,8 +75,8 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         _checkAdapterParams(_dstChainId, PT_SEND_AND_CALL, _adapterParams, _dstGasForCall);
 
         (amount,) = _removeDust(_amount);
-        require(amount > 0, "NativeMinterOFTV2: amount too small");
-        uint messageFee = _debitFrom(amount);
+        require(amount > 0, "NativeProxyOFTWithFee: amount too small");
+        uint messageFee = _debitFromNative(amount);
 
         // encode the msg.sender into the payload instead of _from
         bytes memory lzPayload = _encodeSendAndCallPayload(msg.sender, _toAddress, _ld2sd(amount), _payload, _dstGasForCall);
@@ -87,12 +85,8 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         emit SendToChain(_dstChainId, _from, _toAddress, amount);
     }
 
-    function _debitFrom(uint _amount) internal virtual returns (uint) {
-        return _debitFrom(address(0), 0, 0x0, _amount);
-    }
-
-    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override returns (uint messageFee) {
-        require(msg.value >= _amount, "NativeMinterOFTV2: Insufficient msg.value");
+    function _debitFromNative(uint _amount) internal virtual returns (uint messageFee) {
+        require(msg.value >= _amount, "NativeProxyOFTWithFee: Insufficient msg.value");
         // update the messageFee to take out the token amount
         messageFee = msg.value - _amount;
 
@@ -102,6 +96,10 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         return messageFee;
     }
 
+    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override returns (uint messageFee) {
+        return _debitFromNative(_amount);
+    }
+
     function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override returns (uint) {
         // mint native tokens
         _mintNative(_toAddress, _amount);
@@ -109,8 +107,14 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         return _amount;
     }
 
-    function _transferFrom(address, address, uint _amount) internal virtual override returns (uint) {
-        // native currency is transferred together with this tx already
+    // native currency transfer
+    function _transferFrom(address, address _to, uint _amount) internal virtual override returns (uint) {
+        require(msg.value >= _amount, "NativeProxyOFTWithFee: Insufficient msg.value");
+
+        (bool success, ) = address(_to).call{value: _amount}("");
+
+        require(success, "NativeProxyOFTWithFee: Transferring native tokens failed");
+
         return _amount;
     }
 
@@ -119,17 +123,15 @@ contract NativeProxyOFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, Pro
         uint newBalance = msg.sender.balance + _amount;
         nativeMinter.mintNativeCoin(_toAddress, _amount);
 
-        require(msg.sender.balance == newBalance, "NativeMinterOFTV2: Minting native tokens failed.");
+        require(msg.sender.balance == newBalance, "NativeProxyOFTWithFee: Minting native tokens failed");
 
         // update tracker
         supply = supply + _amount;
     }
 
-    // burn native tokens
+    // burn native tokens sent with tx
     function _burnNative(uint _amount) internal virtual {
-        (bool success, ) = address(0).call{value: _amount}("");
-
-        require(success, "NativeMinterOFTV2: Burning native tokens failed.");
+        _transferFrom(address(0), address(0), _amount);
 
         // update tracker
         supply = supply > _amount ? supply - _amount : 0;
