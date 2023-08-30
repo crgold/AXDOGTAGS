@@ -17,11 +17,13 @@ contract MinterONFT721Upgradeable is ExtendedONFT721Upgradeable {
 
     function __MinterONFT721Upgradeable_init(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) internal onlyInitializing {
         __ERC721_init_unchained(_name, _symbol);
+
         __Ownable_init_unchained();
         __LzAppUpgradeable_init_unchained(_lzEndpoint);
         __ONFT721CoreUpgradeable_init_unchained(_minGasToTransfer);
 
         __ExtendedONFT721Upgradeable_init_unchained(_baseUri, _royaltyBasePoints);
+
         __MinterONFT721Upgradeable_init_unchained();
     }
 

@@ -30,6 +30,7 @@ contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradea
 
     function __ExtendedONFT721Upgradeable_init(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) internal onlyInitializing {
         __ERC721_init_unchained(_name, _symbol);
+
         __Ownable_init_unchained();
         __LzAppUpgradeable_init_unchained(_lzEndpoint);
         __ONFT721CoreUpgradeable_init_unchained(_minGasToTransfer);
@@ -118,4 +119,11 @@ contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradea
     function _beforeTokenTransfer(address from, address to, uint256 firstTokenId, uint256 batchSize) internal virtual override(ERC721EnumerableUpgradeable, ERC721Upgradeable) {
         super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
     }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint[49] private __gap;
 }
