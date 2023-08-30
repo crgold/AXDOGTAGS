@@ -20,8 +20,12 @@ contract OFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, ERC2
     }
 
     function __OFTWithFeeUpgradeable_init(string memory _name, string memory _symbol, uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
-        __BaseOFTWithFeeUpgradeable_init(_sharedDecimals, _lzEndpoint);
-        __ERC20_init(_name, _symbol);
+        __Ownable_init_unchained();
+        __LzAppUpgradeable_init_unchained(_lzEndpoint);
+        __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
+
+        __ERC20_init_unchained(_name, _symbol);
+
         __OFTWithFeeUpgradeable_init_unchained(_sharedDecimals);
     }
 

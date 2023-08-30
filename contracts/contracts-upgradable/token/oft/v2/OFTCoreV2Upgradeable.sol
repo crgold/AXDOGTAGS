@@ -42,11 +42,12 @@ abstract contract OFTCoreV2Upgradeable is NonblockingLzAppUpgradeable {
 
     // _sharedDecimals should be the minimum decimals on all chains
     function __OFTCoreV2Upgradeable_init(uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
-        __NonblockingLzAppUpgradeable_init(_lzEndpoint);
-        __OFTCoreUpgradeable_init_unchained(_sharedDecimals);
+        __Ownable_init_unchained();
+        __LzAppUpgradeable_init_unchained(_lzEndpoint);
+        __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
     }
 
-    function __OFTCoreUpgradeable_init_unchained(uint8 _sharedDecimals) internal onlyInitializing {
+    function __OFTCoreV2Upgradeable_init_unchained(uint8 _sharedDecimals) internal onlyInitializing {
         sharedDecimals = _sharedDecimals;
     }
 

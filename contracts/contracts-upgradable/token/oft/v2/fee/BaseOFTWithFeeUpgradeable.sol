@@ -10,9 +10,9 @@ import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeabl
 abstract contract BaseOFTWithFeeUpgradeable is OFTCoreV2Upgradeable, FeeUpgradeable, ERC165Upgradeable, IOFTWithFeeUpgradeable {
 
     function __BaseOFTWithFeeUpgradeable_init(uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
-        __OFTCoreV2Upgradeable_init(_sharedDecimals, _lzEndpoint);
-        __FeeUpgradeable_init();
-        __ERC165_init();
+        __Ownable_init_unchained();
+        __LzAppUpgradeable_init_unchained(_lzEndpoint);
+        __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
     }
 
     function __BaseOFTWithFeeUpgradeable_init_unchained() internal onlyInitializing {}

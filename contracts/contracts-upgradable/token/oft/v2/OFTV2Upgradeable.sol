@@ -20,8 +20,12 @@ contract OFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, ERC20Upgradeab
     }
 
     function __OFTV2Upgradeable_init(string memory _name, string memory _symbol, uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
-        __BaseOFTV2Upgradeable_init(_sharedDecimals, _lzEndpoint);
-        __ERC20_init(_name, _symbol);
+        __Ownable_init_unchained();
+        __LzAppUpgradeable_init_unchained(_lzEndpoint);
+        __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
+
+        __ERC20_init_unchained(_name, _symbol);
+
         __OFTV2Upgradeable_init_unchained(_sharedDecimals);
     }
 

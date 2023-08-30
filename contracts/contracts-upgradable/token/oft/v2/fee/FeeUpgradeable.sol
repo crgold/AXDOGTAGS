@@ -24,7 +24,7 @@ abstract contract FeeUpgradeable is OwnableUpgradeable {
         __Ownable_init_unchained();
     }
 
-    function __FeeUpgradeable_init_unchained(uint8 _sharedDecimals) internal onlyInitializing {}
+    function __FeeUpgradeable_init_unchained() internal onlyInitializing {}
 
 
     function setDefaultFeeBp(uint16 _feeBp) public virtual onlyOwner {
