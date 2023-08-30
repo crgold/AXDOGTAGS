@@ -115,44 +115,58 @@ npx hardhat --network beam oftv2Send --target-network ethereum --qty 5 --local-c
 
 This ONFT contract allows minting of `nftId`s on separate chains. To ensure two chains can not mint the same `nfId` each contract on each chain is only allowed to mint`nftIds` in certain ranges.
 Check `constants/onftArgs.json` for the specific test configuration used in this demo.
-## UniversalONFT.sol 
+## ONFT
 
 > WARNING: **You must perform the setTrustedRemote() (step 2).**
 
+### Testnet
+
 1. Deploy two contracts:
 ```angular2html
- npx hardhat --network bsc-testnet deploy --tags ExampleUniversalONFT721
- npx hardhat --network fuji deploy --tags ExampleUniversalONFT721
+ npx hardhat --network beam-testnet deploy --tags ExtendedONFT721
+ npx hardhat --network fuji deploy --tags ProxyONFT721
 ```
 2. Set the "trusted remotes", so each contract can send & receive messages from one another, and `only` one another.
 ```angular2html
-npx hardhat --network bsc-testnet setTrustedRemote --target-network fuji --contract ExampleUniversalONFT721
-npx hardhat --network fuji setTrustedRemote --target-network bsc-testnet --contract ExampleUniversalONFT721
+npx hardhat --network beam-testnet setTrustedRemote --target-network fuji --local-contract ExtendedONFT721 --remote-contract ProxyONFT721
+npx hardhat --network fuji setTrustedRemote --target-network beam-testnet --local-contract ProxyONFT721 --remote-contract ExtendedONFT721
 ```
 3. Set the min gas required on the destination
 ```angular2html
-npx hardhat --network bsc-testnet setMinDstGas --target-network fuji --contract ExampleUniversalONFT721 --packet-type 1 --min-gas 100000
-npx hardhat --network fuji setMinDstGas --target-network bsc-testnet --contract ExampleUniversalONFT721 --packet-type 1 --min-gas 100000
+npx hardhat --network beam-testnet setMinDstGas --target-network fuji --contract ExtendedONFT721 --packet-type 1 --min-gas 100000
+npx hardhat --network fuji setMinDstGas --target-network beam-testnet --contract ProxyONFT721 --packet-type 1 --min-gas 100000
 ```
-4. Mint an NFT on each chain!
+4. Approve NFTs to ProxyONFT721 on Fuji if you want to bridge over
+
+5. Send ONFT across chains
 ```angular2html
-npx hardhat --network bsc-testnet onftMint --contract ExampleUniversalONFT721
-npx hardhat --network fuji onftMint --contract ExampleUniversalONFT721
+npx hardhat --network fuji onftSend --target-network beam-testnet --token-id 1 --contract ProxyONFT721
+npx hardhat --network beam-testnet onftSend --target-network fuji --token-id 1 --contract ExtendedONFT721
 ```
-5. [Optional] Show the token owner(s)
+
+### Mainnet
+
+1. Deploy two contracts:
 ```angular2html
-npx hardhat --network bsc-testnet ownerOf --token-id 1 --contract ExampleUniversalONFT721
-npx hardhat --network fuji ownerOf --token-id 11 --contract ExampleUniversalONFT721
+ npx hardhat --network beam deploy --tags ExtendedONFT721Upgradeable
+ npx hardhat --network ethereum deploy --tags ProxyONFT721Upgradeable
 ```
-6. Send ONFT across chains
+2. Set the "trusted remotes", so each contract can send & receive messages from one another, and `only` one another.
 ```angular2html
-npx hardhat --network bsc-testnet onftSend --target-network fuji --token-id 1 --contract ExampleUniversalONFT721
-npx hardhat --network fuji onftSend --target-network bsc-testnet --token-id 11 --contract ExampleUniversalONFT721 
+npx hardhat --network beam setTrustedRemote --target-network ethereum --local-contract ExtendedONFT721Upgradeable --remote-contract ProxyONFT721Upgradeable
+npx hardhat --network ethereum setTrustedRemote --target-network beam --local-contract ProxyONFT721Upgradeable --remote-contract ExtendedONFT721Upgradeable
 ```
-7. Verify your token no longer exists in your wallet on the source chain & wait for it to reach the destination side.
+3. Set the min gas required on the destination
 ```angular2html
-npx hardhat --network bsc-testnet ownerOf --token-id 1 --contract ExampleUniversalONFT721
-npx hardhat --network fuji ownerOf --token-id 1 --contract ExampleUniversalONFT721
+npx hardhat --network beam setMinDstGas --target-network ethereum --contract ExtendedONFT721Upgradeable --packet-type 1 --min-gas 100000
+npx hardhat --network ethereum setMinDstGas --target-network beam --contract ProxyONFT721Upgradeable --packet-type 1 --min-gas 100000
+```
+4. Approve NFTs to ProxyONFT721Upgradeable on Ethereum if you want to bridge over
+
+5. Send ONFT across chains
+```angular2html
+npx hardhat --network ethereum onftSend --target-network beam --token-id 1 --contract ProxyONFT721Upgradeable
+npx hardhat --network beam onftSend --target-network ethereum --token-id 1 --contract ExtendedONFT721Upgradeable
 ```
 
 
