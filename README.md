@@ -169,34 +169,22 @@ npx hardhat --network ethereum onftSend --target-network beam --token-id 1 --con
 npx hardhat --network beam onftSend --target-network ethereum --token-id 1 --contract ExtendedONFT721Upgradeable
 ```
 
+## Verify Contracts
+This repo uses [hardhat-deploy](https://github.com/wighawag/hardhat-deploy).
 
-# OmniCounter.sol
+To verify deployed contracts with Etherscan:
+- add your `ETHERSCAN_API_KEY` as env variable to your `.env`
+- run `npx hardhat --network ethereum etherscan-verify`
 
-OmniCounter is a simple contract with a counter. You can only *remotely* increment the counter!
+To verify deployed contracts with Sourcify (e.g. Beam Explorer):
+- all
+  - run `npx hardhat --network beam  sourcify`
+- single
+  - run `npx hardhat --network beam  sourcify --contract-name <contract name>` for each contract
+  - run `npx hardhat --network beam  sourcify --contract-name <contract name>_Implementation` additionally for upgradeable contracts
 
-1. Deploy both OmniCounters:
+## Check your setTrustedRemote's are wired up correctly
 
-```
-npx hardhat --network bsc-testnet deploy --tags OmniCounter
-npx hardhat --network fuji deploy --tags OmniCounter
-````
-
-2. Set the remote addresses, so each contract can receive messages
-```angular2html
-npx hardhat --network bsc-testnet setTrustedRemote --target-network fuji --contract OmniCounter
-npx hardhat --network fuji setTrustedRemote --target-network bsc-testnet --contract OmniCounter
-```
-3. Send a cross chain message from `bsc-testnet` to `fuji` !
-```angular2html
-npx hardhat --network bsc-testnet incrementCounter --target-network fuji
-```
-
-Optionally use this command in a separate terminal to watch the counter increment in real-time.
-```
-npx hardhat --network fuji ocPoll    
-```
-
-# Check your setTrustedRemote's are wired up correctly
 Just use our checkWireUpAll task to check if your contracts are wired up correctly. You can use it on the example contracts deployed above.
 1) ExampleBasedOFT and ExampleOFT
 ```angular2html
@@ -211,18 +199,17 @@ npx hardhat checkWireUpAll --e testnet --contract ExampleUniversalONFT721
 npx hardhat checkWireUpAll --e testnet --contract OmniCounter
 ```
 
-### See some examples in `/contracts`  🙌
+## See some examples in `/contracts`  🙌
 
 Many of the example contracts make use of LayerZeroEndpointMock.sol which is a nice way to test LayerZero locally!
 
-### For further reading, and a list of endpoint ids and deployed LayerZero contract addresses please take a look at the Gitbook here: https://layerzero.gitbook.io/
+For further reading, and a list of endpoint ids and deployed LayerZero contract addresses please take a look at the Gitbook here: https://layerzero.gitbook.io/
 
-
-# See testnet and mainnet chainIds and addresses, and the format for connecting contracts on different chains:
+See testnet and mainnet chainIds and addresses, and the format for connecting contracts on different chains:
  https://github.com/LayerZero-Labs/set-trusted-remotes 
  https://layerzero.gitbook.io/docs/technical-reference/testnet/testnet-addresses
  https://layerzero.gitbook.io/docs/technical-reference/mainnet/supported-chain-ids
 
 
-## Most recently tested with node version `16.13.1` 
+## Most recently tested with node version `16.13.1`
 
