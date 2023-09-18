@@ -178,10 +178,10 @@ To verify deployed contracts with Etherscan:
 
 To verify deployed contracts with Sourcify (e.g. Beam Explorer):
 - all
-  - run `npx hardhat --network beam  sourcify`
+  - run `npx hardhat --network beam sourcify`
 - single
-  - run `npx hardhat --network beam  sourcify --contract-name <contract name>` for each contract
-  - run `npx hardhat --network beam  sourcify --contract-name <contract name>_Implementation` additionally for upgradeable contracts
+  - run `npx hardhat --network beam sourcify --contract-name <contract name>` for each contract
+  - run `npx hardhat --network beam sourcify --contract-name <contract name>_Implementation` additionally for upgradeable contracts
 
 ## Check your setTrustedRemote's are wired up correctly
 
