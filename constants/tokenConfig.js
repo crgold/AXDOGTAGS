@@ -11,6 +11,14 @@ module.exports = {
       royaltyBasePoints: 500,
       minGas: 100000,
     },
+    UsdcOFT: {
+      name: "USD Coin",
+      symbol: "USDC",
+    },
+    UsdtOFT: {
+      name: "Tether USD",
+      symbol: "USDT",
+    },
   },
   "beam-testnet": {
     NativeOFTWithFeeUpgradeable: {
@@ -36,6 +44,12 @@ module.exports = {
     ProxyONFT721Upgradeable: {
       address: "0x9eEAeCBE2884AA7e82f450E3Fc174F30Fc2a8de3", // Edenhorde Eclipse
       minGas: 100000,
+    },
+    UsdcProxyOFT: {
+      address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC
+    },
+    UsdtProxyOFT: {
+      address: "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
     },
   },
   fuji: {
