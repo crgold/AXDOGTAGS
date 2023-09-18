@@ -1,10 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
 
-const NAME = "Edenhorde"
-const SYMBOL = "EH"
-const BASE_URI = "https://ipfs.io/ipfs/QmbHSG2Y14wy2mSF7L57fzE4evv1BhTtUWtkzUaSnUsacB/"
-const ROYALTY_BASE_POINTS = 500
-const MIN_GAS = 100000
+const CONTRACT_NAME = "ExtendedONFT721Upgradeable"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -19,7 +16,13 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
         lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     }
 
-    await deploy("ExtendedONFT721Upgradeable", {
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
+    if (!tokenConfig.name || !tokenConfig.symbol || !tokenConfig.baseUri) {
+        console.error("No configuration found for target network.")
+        return
+    }
+
+    await deploy(CONTRACT_NAME, {
         from: deployer,
         log: true,
         waitConfirmations: 1,
@@ -29,11 +32,11 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [NAME, SYMBOL, BASE_URI, ROYALTY_BASE_POINTS, MIN_GAS, lzEndpointAddress],
+                    args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.baseUri, tokenConfig.royaltyBasePoints || 0, tokenConfig.minGas || 100000, lzEndpointAddress],
                 },
             },
         },
     })
 }
 
-module.exports.tags = ["ExtendedONFT721Upgradeable"]
+module.exports.tags = [CONTRACT_NAME]

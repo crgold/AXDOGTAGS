@@ -1,4 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
+
+const CONTRACT_NAME = "NativeOFTWithFeeUpgradeable"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -13,11 +16,13 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
         lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     }
 
-    const sharedDecimals = 6;
-    const name = "LayerZero Merit Circle";
-    const symbol = "LZMC";
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
+    if (!tokenConfig.name || !tokenConfig.symbol) {
+        console.error("No configuration found for target network.")
+        return
+    }
 
-    await deploy("NativeOFTWithFeeUpgradeable", {
+    await deploy(CONTRACT_NAME, {
         from: deployer,
         log: true,
         waitConfirmations: 1,
@@ -27,11 +32,11 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [name, symbol, sharedDecimals, lzEndpointAddress],
+                    args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
                 },
             },
         },
     })
 }
 
-module.exports.tags = ["NativeOFTWithFeeUpgradeable"]
+module.exports.tags = [CONTRACT_NAME]

@@ -1,4 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
+
+const CONTRACT_NAME = "ProxyOFTWithFeeUpgradeable"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -13,20 +16,14 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
         lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     }
 
-    // MC Token address
-    const TOKEN_ADDRESS_BY_NETWORK = {
-        ethereum: "0x949D48EcA67b17269629c7194F4b727d4Ef9E5d6",
-        fuji: "0x955723e26bd1b2165391BCaf39A92f77b30FFe01",
-    }
-    const tokenAddress = TOKEN_ADDRESS_BY_NETWORK[hre.network.name]
-    const sharedDecimals = 6
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
 
-    if (!tokenAddress) {
+    if (!tokenConfig.address) {
         console.error("No configured token address found for target network.")
         return
     }
 
-    await deploy("ProxyOFTWithFeeUpgradeable", {
+    await deploy(CONTRACT_NAME, {
         from: deployer,
         log: true,
         waitConfirmations: 1,
@@ -36,11 +33,11 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [tokenAddress, sharedDecimals, lzEndpointAddress],
+                    args: [tokenConfig.address, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
                 },
             },
         },
     })
 }
 
-module.exports.tags = ["ProxyOFTWithFeeUpgradeable"]
+module.exports.tags = [CONTRACT_NAME]

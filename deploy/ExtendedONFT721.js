@@ -1,9 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
 
-const NAME = "Snakes on a chain"
-const SYMBOL = "SNAKE"
-const BASE_URI = "https://snake-on-a-chain-euppi.ondigitalocean.app/token/"
-const MIN_GAS = 100000
+const CONTRACT_NAME = "ExtendedONFT721"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -13,12 +11,18 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     const lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     console.log(`[${hre.network.name}] Endpoint Address: ${lzEndpointAddress}`)
 
-    await deploy("ExtendedONFT721", {
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
+    if (!tokenConfig.name || !tokenConfig.symbol || !tokenConfig.baseUri) {
+        console.error("No configuration found for target network.")
+        return
+    }
+
+    await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [NAME, SYMBOL, BASE_URI, MIN_GAS, lzEndpointAddress],
+        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.baseUri, tokenConfig.royaltyBasePoints || 0, tokenConfig.minGas || 100000, lzEndpointAddress],
         log: true,
         waitConfirmations: 1,
     })
 }
 
-module.exports.tags = ["ExtendedONFT721"]
+module.exports.tags = [CONTRACT_NAME]

@@ -1,7 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
 const TOKEN_CONFIG = require("../constants/tokenConfig")
 
-const CONTRACT_NAME = "ONFT721"
+const CONTRACT_NAME = "OFTV2"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -19,7 +19,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.minGas || 100000, lzEndpointAddress],
+        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
         log: true,
         waitConfirmations: 1,
     })

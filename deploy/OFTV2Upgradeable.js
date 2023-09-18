@@ -1,7 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
 const TOKEN_CONFIG = require("../constants/tokenConfig")
 
-const CONTRACT_NAME = "ProxyONFT721Upgradeable"
+const CONTRACT_NAME = "OFTV2Upgradeable"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -17,8 +17,8 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     }
 
     const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
-    if (!tokenConfig.address) {
-        console.error("No configured token address found for target network.")
+    if (!tokenConfig.name || !tokenConfig.symbol) {
+        console.error("No configuration found for target network.")
         return
     }
 
@@ -32,7 +32,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [tokenConfig.minGas || 100000, lzEndpointAddress, tokenConfig.address],
+                    args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
                 },
             },
         },

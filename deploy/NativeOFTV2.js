@@ -1,5 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
-const {ethers} = require("hardhat");
+const TOKEN_CONFIG = require("../constants/tokenConfig")
+
+const CONTRACT_NAME = "NativeOFTV2"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -8,16 +10,19 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     const lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     console.log(`[${hre.network.name}] Endpoint Address: ${lzEndpointAddress}`)
-    const name = "Merit Circle";
-    const symbol = "MC";
-    const sharedDecimals = 6;
 
-    await deploy("NativeOFTV2", {
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
+    if (!tokenConfig.name || !tokenConfig.symbol) {
+        console.error("No configuration found for target network.")
+        return
+    }
+
+    await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [name, symbol, sharedDecimals, lzEndpointAddress],
+        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
         log: true,
         waitConfirmations: 1,
     })
 }
 
-module.exports.tags = ["NativeOFTV2"]
+module.exports.tags = [CONTRACT_NAME]
