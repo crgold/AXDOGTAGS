@@ -19,7 +19,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals || 6, lzEndpointAddress],
+        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.sharedDecimals != null ? tokenConfig.sharedDecimals : 6, lzEndpointAddress],
         log: true,
         waitConfirmations: 1,
     })
