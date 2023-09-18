@@ -19,6 +19,10 @@ module.exports = {
       name: "Tether USD",
       symbol: "USDT",
     },
+    AvaxOFT: {
+      name: "Avalanche",
+      symbol: "AVAX",
+    },
   },
   "beam-testnet": {
     NativeOFTWithFeeUpgradeable: {
@@ -50,6 +54,12 @@ module.exports = {
     },
     UsdtProxyOFT: {
       address: "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
+    },
+  },
+  avalanche: {
+    AvaxNativeOFT: {
+      name: "LayerZero Avalanche",
+      symbol: "LZAVAX",
     },
   },
   fuji: {
