@@ -1,4 +1,5 @@
 const CHAIN_ID = require("../constants/chainIds.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
 
 module.exports = async function (taskArgs, hre) {
     let signers = await ethers.getSigners()
@@ -30,17 +31,25 @@ module.exports = async function (taskArgs, hre) {
     const localContractInstance = await ethers.getContract(localContract)
 
     // quote fee with default adapterParams
-    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 500000]) // default adapterParams example
+    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]) // default adapterParams example
 
     let lzFees = await localContractInstance.estimateSendFee(remoteChainId, toAddressBytes, qty, false, adapterParams)
     console.log(`lzFees[0] (wei): ${lzFees[0]} / (eth): ${ethers.utils.formatEther(lzFees[0])}`)
 
+    let isNative = localContract.indexOf("Native") >= 0
+    let withFee = localContract.indexOf("WithFee") >= 0
+    if (TOKEN_CONFIG[hre.network.name] && TOKEN_CONFIG[hre.network.name][localContract]) {
+        const tokenConfig = TOKEN_CONFIG[hre.network.name][localContract]
+        isNative = isNative || tokenConfig.isNative
+        withFee = withFee || tokenConfig.withFee
+    }
+
     // for native tokens, we need to add them on top of the lzFees in msg.value
-    let value = localContract.indexOf("NativeOFT") === 0 ? lzFees[0].add(qty) : lzFees[0]
+    let value = isNative ? lzFees[0].add(qty) : lzFees[0]
 
     let tx;
 
-    if (localContract.indexOf("WithFee") >= 0) {
+    if (withFee) {
         // get provider fee
         let oftFee = await localContractInstance.quoteOFTFee(remoteChainId, qty)
         let minQty = qty.sub(oftFee);
