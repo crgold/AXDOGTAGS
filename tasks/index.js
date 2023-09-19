@@ -55,6 +55,11 @@ task("getSigners", "show the signers of the current mnemonic", require("./getSig
 
 task("approveERC1155", "approve it to transfer my nfts", require("./approveERC1155")).addParam("addr", "the address to approve")
 
+task("approveERC20", "approve Omnichain proxy to transfer your ERC20 tokens", require("./approveERC20"))
+    .addOptionalParam("contract", "the name of the OFT contract, e.g. 'ProxyOFTV2'", "")
+    .addOptionalParam("address", "address of the token you want to approve (leave empty to use tokenConfig values)", "")
+    .addOptionalParam("spender", "address that should get an allowance (overrides `contract`)", "")
+
 task("sendProxyONFT1155", "send a tokenid and quantity", require("./sendProxyONFT1155"))
     .addParam("targetNetwork", "the destination chainId")
     .addParam("tokenId", "the NFT tokenId")
@@ -126,6 +131,7 @@ task("oftv2Send", "send tokens to another chain", require("./oftv2Send"))
     .addOptionalParam("localContract", "Name of local contract if the names are different")
     .addOptionalParam("remoteContract", "Name of remote contract if the names are different")
     .addOptionalParam("contract", "If both contracts are the same name")
+    .addOptionalParam("decimals", "decimals of contract if not 18")
 
 //
 task("onftMint", "mint() mint ONFT", require("./onftMint"))
@@ -199,3 +205,10 @@ task("isStoredPayload", "check if stored payload", require("./isStoredPayload"))
     .addParam("desAddress", "")
     .addOptionalParam("payload", "")
     .addOptionalParam("clear", "", false, types.boolean)
+
+
+task("setupOFT", "go through all steps of the base OFTV2 setup", require("./setupOFT"))
+    .addParam("localContract", "name of contract on source chain")
+    .addParam("remoteContract", "name of contract on destination chain")
+    .addParam("targetNetwork", "destination network")
+    .addOptionalParam("minGas", "gas config", "200000")

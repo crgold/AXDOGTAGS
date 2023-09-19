@@ -5,7 +5,6 @@ module.exports = async function (taskArgs, hre) {
     let signers = await ethers.getSigners()
     let owner = signers[0]
     let toAddress = owner.address;
-    let qty = ethers.utils.parseEther(taskArgs.qty)
 
     let localContract, remoteContract;
 
@@ -30,12 +29,7 @@ module.exports = async function (taskArgs, hre) {
     // get local contract
     const localContractInstance = await ethers.getContract(localContract)
 
-    // quote fee with default adapterParams
-    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]) // default adapterParams example
-
-    let lzFees = await localContractInstance.estimateSendFee(remoteChainId, toAddressBytes, qty, false, adapterParams)
-    console.log(`lzFees[0] (wei): ${lzFees[0]} / (eth): ${ethers.utils.formatEther(lzFees[0])}`)
-
+    // check config
     let isNative = localContract.indexOf("Native") >= 0
     let withFee = localContract.indexOf("WithFee") >= 0
     if (TOKEN_CONFIG[hre.network.name] && TOKEN_CONFIG[hre.network.name][localContract]) {
@@ -44,16 +38,31 @@ module.exports = async function (taskArgs, hre) {
         withFee = withFee || tokenConfig.withFee
     }
 
+    // parse qty with correct decimals
+    let decimals = 18
+    if (taskArgs.decimals) {
+        decimals = parseInt(taskArgs.decimals)
+        if (Number.isNaN(decimals) || decimals == null || decimals > 18 || decimals < 0) {
+            console.error("invalid decimals passed in")
+            return
+        }
+    }
+    let qty = ethers.utils.parseUnits(taskArgs.qty, decimals)
+
+    // quote LZ fee with default adapterParams
+    let adapterParams = ethers.utils.solidityPack(["uint16", "uint256"], [1, 200000]) // default adapterParams example
+    let lzFees = await localContractInstance.estimateSendFee(remoteChainId, toAddressBytes, qty, false, adapterParams)
+    console.log(`lzFees[0] (wei): ${lzFees[0]} / (eth): ${ethers.utils.formatEther(lzFees[0])}`)
+
     // for native tokens, we need to add them on top of the lzFees in msg.value
     let value = isNative ? lzFees[0].add(qty) : lzFees[0]
 
     let tx;
-
     if (withFee) {
         // get provider fee
         let oftFee = await localContractInstance.quoteOFTFee(remoteChainId, qty)
         let minQty = qty.sub(oftFee);
-        console.log(`oftFee (wei): ${oftFee} / (eth): ${ethers.utils.formatEther(oftFee)}; minQty (eth): ${ethers.utils.formatEther(minQty)}`)
+        console.log(`oftFee (wei): ${oftFee} / (eth): ${ethers.utils.formatUnits(oftFee, decimals)}; minQty (eth): ${ethers.utils.formatUnits(minQty, decimals)}`)
 
         tx = await (
             await localContractInstance.sendFrom(
