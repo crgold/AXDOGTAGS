@@ -48,6 +48,21 @@ module.exports = {
       royaltyBasePoints: 500,
       minGas: 100000,
     },
+    UsdcOFT: {
+      name: "USD Coin",
+      symbol: "USDC",
+      withFee: true,
+    },
+    UsdtOFT: {
+      name: "Tether USD",
+      symbol: "USDT",
+      withFee: true,
+    },
+    AvaxOFT: {
+      name: "Avalanche",
+      symbol: "AVAX",
+      withFee: true,
+    },
   },
   ethereum: {
     ProxyOFTWithFeeUpgradeable: {
@@ -67,6 +82,16 @@ module.exports = {
       withFee: true,
     },
   },
+  goerli: {
+    UsdcProxyOFT: {
+      address: "0x2724A590fe9cC7c66A83204aa11D6ec7Aa8e7C58", // USDC
+      withFee: true,
+    },
+    UsdtProxyOFT: {
+      address: "0x908C7A34a87FD8e207BC4585707E484Ed2c9E8aE", // USDT
+      withFee: true,
+    },
+  },
   avalanche: {
     AvaxNativeOFT: {
       name: "LayerZero Avalanche",
@@ -83,6 +108,12 @@ module.exports = {
     ProxyONFT721: {
       address: "0x588348d84498d0689B76F89438bE58999a5434EE", // Snakes on a chain
       minGas: 100000,
+    },
+    AvaxNativeOFT: {
+      name: "LayerZero Avalanche",
+      symbol: "LZAVAX",
+      withFee: true,
+      isNative: true,
     },
   }
 }
