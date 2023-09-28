@@ -60,6 +60,11 @@ task("approveERC20", "approve Omnichain proxy to transfer your ERC20 tokens", re
     .addOptionalParam("address", "address of the token you want to approve (leave empty to use tokenConfig values)", "")
     .addOptionalParam("spender", "address that should get an allowance (overrides `contract`)", "")
 
+task("approveERC721", "approve Omnichain proxy to transfer your ERC721 tokens", require("./approveERC721"))
+    .addOptionalParam("contract", "the name of the OFT contract, e.g. 'ProxyONFT'", "")
+    .addOptionalParam("address", "address of the token you want to approve (leave empty to use tokenConfig values)", "")
+    .addOptionalParam("spender", "address that should get an allowance (overrides `contract`)", "")
+
 task("sendProxyONFT1155", "send a tokenid and quantity", require("./sendProxyONFT1155"))
     .addParam("targetNetwork", "the destination chainId")
     .addParam("tokenId", "the NFT tokenId")
@@ -212,3 +217,9 @@ task("setupOFT", "go through all steps of the base OFTV2 setup", require("./setu
     .addParam("remoteContract", "name of contract on destination chain")
     .addParam("targetNetwork", "destination network")
     .addOptionalParam("minGas", "gas config", "200000")
+
+task("setupONFT721", "go through all steps of the base ONFT721 setup", require("./setupONFT721"))
+    .addParam("localContract", "name of contract on source chain")
+    .addParam("remoteContract", "name of contract on destination chain")
+    .addParam("targetNetwork", "destination network")
+    .addOptionalParam("minGas", "gas config", "")
