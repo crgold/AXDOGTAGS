@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 
 import "../../../lzApp/NonblockingLzAppUpgradeable.sol";
 import "../../../../libraries/ExcessivelySafeCall.sol";
-import "./ICommonOFTUpgradeable.sol";
-import "./IOFTReceiverV2Upgradeable.sol";
+import "./interfaces/ICommonOFTUpgradeable.sol";
+import "./interfaces/IOFTReceiverV2Upgradeable.sol";
 
 abstract contract OFTCoreV2Upgradeable is NonblockingLzAppUpgradeable {
     using BytesLib for bytes;

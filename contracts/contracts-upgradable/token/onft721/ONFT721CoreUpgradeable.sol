@@ -2,8 +2,8 @@
 
 pragma solidity ^0.8.2;
 
-import "./IONFT721CoreUpgradeable.sol";
-import "../../../lzApp/NonblockingLzAppUpgradeable.sol";
+import "./interfaces/IONFT721CoreUpgradeable.sol";
+import "../../lzApp/NonblockingLzAppUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 

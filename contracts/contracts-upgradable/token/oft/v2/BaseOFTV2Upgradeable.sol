@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./OFTCoreV2Upgradeable.sol";
-import "./IOFTV2Upgradeable.sol";
+import "./interfaces/IOFTV2Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
 abstract contract BaseOFTV2Upgradeable is OFTCoreV2Upgradeable, ERC165Upgradeable, IOFTV2Upgradeable {

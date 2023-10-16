@@ -77,7 +77,7 @@ In our example, we'll bridge **USDC** from Ethereum to Beam using _upgradeable_ 
 - the _Proxy_ contract on the Ethereum side: `ProxyOFTV2Upgradeable`
 - an _Omnichain ERC20 contract_ on the Beam side: `OFTV2Upgradeable`
 
-Create a new contract file, and drop it into `contracts/contracts-upgradeable/example/MyUSDCBridge.sol`.
+Create a new contract file, and drop it into `contracts/contracts-upgradeable/examples/MyUSDCBridge.sol`.
 This is necessary to not cause any clashes with already deployed contracts with the same name.
 
 ```solidity

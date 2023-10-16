@@ -2,7 +2,7 @@
 
 pragma solidity >=0.5.0;
 
-import "../ICommonOFTUpgradeable.sol";
+import "../interfaces/ICommonOFTUpgradeable.sol";
 
 /**
  * @dev Interface of the IOFT core standard
