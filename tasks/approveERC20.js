@@ -28,11 +28,7 @@ module.exports = async function (taskArgs, hre) {
 
     console.log(`ERC20 address: ${erc20Address},\n spender to approve: ${spender}`)
 
-    let tx = await
-        (await erc20.approve(
-            spender,
-            "115792089237316195423570985008687907853269984665640564039457584007913129639935"
-        )).wait()
+    let tx = await (await erc20.approve(spender, "115792089237316195423570985008687907853269984665640564039457584007913129639935")).wait()
 
     console.log(`approve tx success: ${tx.transactionHash}`)
 }

@@ -4,24 +4,24 @@ const TOKEN_CONFIG = require("../constants/tokenConfig")
 module.exports = async function (taskArgs, hre) {
     let signers = await ethers.getSigners()
     let owner = signers[0]
-    let toAddress = owner.address;
+    let toAddress = owner.address
 
-    let localContract, remoteContract;
+    let localContract, remoteContract
 
-    if(taskArgs.contract) {
-        localContract = taskArgs.contract;
-        remoteContract = taskArgs.contract;
+    if (taskArgs.contract) {
+        localContract = taskArgs.contract
+        remoteContract = taskArgs.contract
     } else {
-        localContract = taskArgs.localContract;
-        remoteContract = taskArgs.remoteContract;
+        localContract = taskArgs.localContract
+        remoteContract = taskArgs.remoteContract
     }
 
-    if(!localContract || !remoteContract) {
+    if (!localContract || !remoteContract) {
         console.log("Must pass in contract name OR pass in both localContract name and remoteContract name")
         return
     }
 
-    let toAddressBytes = ethers.utils.defaultAbiCoder.encode(['address'],[toAddress])
+    let toAddressBytes = ethers.utils.defaultAbiCoder.encode(["address"], [toAddress])
 
     // get remote chain id
     const remoteChainId = CHAIN_ID[taskArgs.targetNetwork]
@@ -57,20 +57,25 @@ module.exports = async function (taskArgs, hre) {
     // for native tokens, we need to add them on top of the lzFees in msg.value
     let value = isNative ? lzFees[0].add(qty) : lzFees[0]
 
-    let tx;
+    let tx
     if (withFee) {
         // get provider fee
         let oftFee = await localContractInstance.quoteOFTFee(remoteChainId, qty)
-        let minQty = qty.sub(oftFee);
-        console.log(`oftFee (wei): ${oftFee} / (eth): ${ethers.utils.formatUnits(oftFee, decimals)}; minQty (eth): ${ethers.utils.formatUnits(minQty, decimals)}`)
+        let minQty = qty.sub(oftFee)
+        console.log(
+            `oftFee (wei): ${oftFee} / (eth): ${ethers.utils.formatUnits(oftFee, decimals)}; minQty (eth): ${ethers.utils.formatUnits(
+                minQty,
+                decimals
+            )}`
+        )
 
         tx = await (
             await localContractInstance.sendFrom(
-                owner.address,                 // 'from' address to send tokens
-                remoteChainId,                 // remote LayerZero chainId
-                toAddressBytes,                // 'to' address to send tokens
-                qty,                           // amount of tokens to send (in wei)
-                minQty,                        // the minimum amount of tokens to receive on remote chain
+                owner.address, // 'from' address to send tokens
+                remoteChainId, // remote LayerZero chainId
+                toAddressBytes, // 'to' address to send tokens
+                qty, // amount of tokens to send (in wei)
+                minQty, // the minimum amount of tokens to receive on remote chain
                 [owner.address, ethers.constants.AddressZero, adapterParams],
                 { value }
             )
@@ -78,10 +83,10 @@ module.exports = async function (taskArgs, hre) {
     } else {
         tx = await (
             await localContractInstance.sendFrom(
-                owner.address,                 // 'from' address to send tokens
-                remoteChainId,                 // remote LayerZero chainId
-                toAddressBytes,                // 'to' address to send tokens
-                qty,                           // amount of tokens to send (in wei)
+                owner.address, // 'from' address to send tokens
+                remoteChainId, // remote LayerZero chainId
+                toAddressBytes, // 'to' address to send tokens
+                qty, // amount of tokens to send (in wei)
                 [owner.address, ethers.constants.AddressZero, adapterParams],
                 { value }
             )

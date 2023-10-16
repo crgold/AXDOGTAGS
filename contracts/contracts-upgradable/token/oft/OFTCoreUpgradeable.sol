@@ -27,13 +27,27 @@ abstract contract OFTCoreUpgradeable is Initializable, NonblockingLzAppUpgradeab
         return interfaceId == type(IOFTCoreUpgradeable).interfaceId || super.supportsInterface(interfaceId);
     }
 
-    function estimateSendFee(uint16 _dstChainId, bytes calldata _toAddress, uint _amount, bool _useZro, bytes calldata _adapterParams) public view virtual override returns (uint nativeFee, uint zroFee) {
+    function estimateSendFee(
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint _amount,
+        bool _useZro,
+        bytes calldata _adapterParams
+    ) public view virtual override returns (uint nativeFee, uint zroFee) {
         // mock the payload for sendFrom()
         bytes memory payload = abi.encode(PT_SEND, _toAddress, _amount);
         return lzEndpoint.estimateFees(_dstChainId, address(this), payload, _useZro, _adapterParams);
     }
 
-    function sendFrom(address _from, uint16 _dstChainId, bytes calldata _toAddress, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes calldata _adapterParams) public payable virtual override {
+    function sendFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint _amount,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes calldata _adapterParams
+    ) public payable virtual override {
         _send(_from, _dstChainId, _toAddress, _amount, _refundAddress, _zroPaymentAddress, _adapterParams);
     }
 
@@ -42,7 +56,12 @@ abstract contract OFTCoreUpgradeable is Initializable, NonblockingLzAppUpgradeab
         emit SetUseCustomAdapterParams(_useCustomAdapterParams);
     }
 
-    function _nonblockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) internal virtual override {
+    function _nonblockingLzReceive(
+        uint16 _srcChainId,
+        bytes memory _srcAddress,
+        uint64 _nonce,
+        bytes memory _payload
+    ) internal virtual override {
         uint16 packetType;
         assembly {
             packetType := mload(add(_payload, 32))
@@ -55,7 +74,15 @@ abstract contract OFTCoreUpgradeable is Initializable, NonblockingLzAppUpgradeab
         }
     }
 
-    function _send(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual {
+    function _send(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint _amount,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual {
         _checkAdapterParams(_dstChainId, PT_SEND, _adapterParams, NO_EXTRA_GAS);
 
         uint amount = _debitFrom(_from, _dstChainId, _toAddress, _amount);
@@ -83,9 +110,9 @@ abstract contract OFTCoreUpgradeable is Initializable, NonblockingLzAppUpgradeab
         }
     }
 
-    function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount) internal virtual returns(uint);
+    function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _amount) internal virtual returns (uint);
 
-    function _creditTo(uint16 _srcChainId, address _toAddress, uint _amount) internal virtual returns(uint);
+    function _creditTo(uint16 _srcChainId, address _toAddress, uint _amount) internal virtual returns (uint);
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

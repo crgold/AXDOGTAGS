@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "./BaseOFTV2Upgradeable.sol";
 
 contract OFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, ERC20Upgradeable, Proxied {
-
     uint internal ld2sdRate;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -19,7 +18,12 @@ contract OFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, ERC20Upgradeab
         __OFTV2Upgradeable_init(_name, _symbol, _sharedDecimals, _lzEndpoint);
     }
 
-    function __OFTV2Upgradeable_init(string memory _name, string memory _symbol, uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
+    function __OFTV2Upgradeable_init(
+        string memory _name,
+        string memory _symbol,
+        uint8 _sharedDecimals,
+        address _lzEndpoint
+    ) internal onlyInitializing {
         __Ownable_init_unchained();
         __LzAppUpgradeable_init_unchained(_lzEndpoint);
         __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
@@ -36,8 +40,8 @@ contract OFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, ERC20Upgradeab
     }
 
     /************************************************************************
-    * public functions
-    ************************************************************************/
+     * public functions
+     ************************************************************************/
     function circulatingSupply() public view virtual override returns (uint) {
         return totalSupply();
     }
@@ -47,8 +51,8 @@ contract OFTV2Upgradeable is Initializable, BaseOFTV2Upgradeable, ERC20Upgradeab
     }
 
     /************************************************************************
-    * internal functions
-    ************************************************************************/
+     * internal functions
+     ************************************************************************/
     function _debitFrom(address _from, uint16, bytes32, uint _amount) internal virtual override returns (uint) {
         address spender = _msgSender();
         if (_from != spender) _spendAllowance(_from, spender, _amount);

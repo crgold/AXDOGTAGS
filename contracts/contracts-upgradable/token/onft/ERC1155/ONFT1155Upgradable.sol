@@ -17,7 +17,9 @@ contract ONFT1155Upgradeable is Initializable, ONFT1155CoreUpgradeable, ERC1155U
 
     function __ONFT1155Upgradeable_init_unchained() internal onlyInitializing {}
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ONFT1155CoreUpgradeable, ERC1155Upgradeable, IERC165Upgradeable) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ONFT1155CoreUpgradeable, ERC1155Upgradeable, IERC165Upgradeable) returns (bool) {
         return interfaceId == type(IONFT1155Upgradeable).interfaceId || super.supportsInterface(interfaceId);
     }
 

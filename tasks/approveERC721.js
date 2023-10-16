@@ -28,11 +28,7 @@ module.exports = async function (taskArgs, hre) {
 
     console.log(`ERC721 address: ${erc721Address},\n spender to approve: ${spender}`)
 
-    let tx = await
-        (await erc721.setApprovalForAll(
-            spender,
-            true
-        )).wait()
+    let tx = await (await erc721.setApprovalForAll(spender, true)).wait()
 
     console.log(`approve tx success: ${tx.transactionHash}`)
 }

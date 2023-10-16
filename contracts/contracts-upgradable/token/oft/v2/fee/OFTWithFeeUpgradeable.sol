@@ -7,7 +7,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "./BaseOFTWithFeeUpgradeable.sol";
 
 contract OFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, ERC20Upgradeable, Proxied {
-
     uint internal ld2sdRate;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
@@ -19,7 +18,12 @@ contract OFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, ERC2
         __OFTWithFeeUpgradeable_init(_name, _symbol, _sharedDecimals, _lzEndpoint);
     }
 
-    function __OFTWithFeeUpgradeable_init(string memory _name, string memory _symbol, uint8 _sharedDecimals, address _lzEndpoint) internal onlyInitializing {
+    function __OFTWithFeeUpgradeable_init(
+        string memory _name,
+        string memory _symbol,
+        uint8 _sharedDecimals,
+        address _lzEndpoint
+    ) internal onlyInitializing {
         __Ownable_init_unchained();
         __LzAppUpgradeable_init_unchained(_lzEndpoint);
         __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
@@ -36,8 +40,8 @@ contract OFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, ERC2
     }
 
     /************************************************************************
-    * public functions
-    ************************************************************************/
+     * public functions
+     ************************************************************************/
     function circulatingSupply() public view virtual override returns (uint) {
         return totalSupply();
     }
@@ -47,8 +51,8 @@ contract OFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, ERC2
     }
 
     /************************************************************************
-    * internal functions
-    ************************************************************************/
+     * internal functions
+     ************************************************************************/
     function _debitFrom(address _from, uint16, bytes32, uint _amount) internal virtual override returns (uint) {
         address spender = _msgSender();
         if (_from != spender) _spendAllowance(_from, spender, _amount);

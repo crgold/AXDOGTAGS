@@ -25,24 +25,74 @@ abstract contract ONFT1155CoreUpgradeable is Initializable, NonblockingLzAppUpgr
         return interfaceId == type(IONFT1155CoreUpgradeable).interfaceId || super.supportsInterface(interfaceId);
     }
 
-    function estimateSendFee(uint16 _dstChainId, bytes memory _toAddress, uint _tokenId, uint _amount, bool _useZro, bytes memory _adapterParams) public view virtual override returns (uint nativeFee, uint zroFee) {
+    function estimateSendFee(
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint _tokenId,
+        uint _amount,
+        bool _useZro,
+        bytes memory _adapterParams
+    ) public view virtual override returns (uint nativeFee, uint zroFee) {
         return estimateSendBatchFee(_dstChainId, _toAddress, _toSingletonArray(_tokenId), _toSingletonArray(_amount), _useZro, _adapterParams);
     }
 
-    function estimateSendBatchFee(uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts, bool _useZro, bytes memory _adapterParams) public view virtual override returns (uint nativeFee, uint zroFee) {
+    function estimateSendBatchFee(
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        uint[] memory _amounts,
+        bool _useZro,
+        bytes memory _adapterParams
+    ) public view virtual override returns (uint nativeFee, uint zroFee) {
         bytes memory payload = abi.encode(_toAddress, _tokenIds, _amounts);
         return lzEndpoint.estimateFees(_dstChainId, address(this), payload, _useZro, _adapterParams);
     }
 
-    function sendFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _tokenId, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) public payable virtual override {
-        _sendBatch(_from, _dstChainId, _toAddress, _toSingletonArray(_tokenId), _toSingletonArray(_amount), _refundAddress, _zroPaymentAddress, _adapterParams);
+    function sendFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint _tokenId,
+        uint _amount,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) public payable virtual override {
+        _sendBatch(
+            _from,
+            _dstChainId,
+            _toAddress,
+            _toSingletonArray(_tokenId),
+            _toSingletonArray(_amount),
+            _refundAddress,
+            _zroPaymentAddress,
+            _adapterParams
+        );
     }
 
-    function sendBatchFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) public payable virtual override {
+    function sendBatchFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        uint[] memory _amounts,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) public payable virtual override {
         _sendBatch(_from, _dstChainId, _toAddress, _tokenIds, _amounts, _refundAddress, _zroPaymentAddress, _adapterParams);
     }
 
-    function _sendBatch(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual {
+    function _sendBatch(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        uint[] memory _amounts,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual {
         _debitFrom(_from, _dstChainId, _toAddress, _tokenIds, _amounts);
         bytes memory payload = abi.encode(_toAddress, _tokenIds, _amounts);
         if (_tokenIds.length == 1) {
@@ -67,7 +117,7 @@ abstract contract ONFT1155CoreUpgradeable is Initializable, NonblockingLzAppUpgr
     function _nonblockingLzReceive(
         uint16 _srcChainId,
         bytes memory _srcAddress,
-        uint64, /*_nonce*/
+        uint64 /*_nonce*/,
         bytes memory _payload
     ) internal virtual override {
         // decode and load the toAddress
@@ -91,7 +141,13 @@ abstract contract ONFT1155CoreUpgradeable is Initializable, NonblockingLzAppUpgr
         emit SetUseCustomAdapterParams(_useCustomAdapterParams);
     }
 
-    function _debitFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, uint[] memory _amounts) internal virtual;
+    function _debitFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        uint[] memory _amounts
+    ) internal virtual;
 
     function _creditTo(uint16 _srcChainId, address _toAddress, uint[] memory _tokenIds, uint[] memory _amounts) internal virtual;
 

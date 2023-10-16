@@ -3,7 +3,7 @@
 pragma solidity ^0.8.2;
 
 import "./LzAppUpgradeable.sol";
-import "../../util/ExcessivelySafeCall.sol";
+import "../../libraries/ExcessivelySafeCall.sol";
 
 /*
  * the default LayerZero messaging behaviour is blocking, i.e. any failed message will block the channel
@@ -27,14 +27,24 @@ abstract contract NonblockingLzAppUpgradeable is Initializable, LzAppUpgradeable
 
     // overriding the virtual function in LzReceiver
     function _blockingLzReceive(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload) internal virtual override {
-        (bool success, bytes memory reason) = address(this).excessivelySafeCall(gasleft(), 150, abi.encodeWithSelector(this.nonblockingLzReceive.selector, _srcChainId, _srcAddress, _nonce, _payload));
+        (bool success, bytes memory reason) = address(this).excessivelySafeCall(
+            gasleft(),
+            150,
+            abi.encodeWithSelector(this.nonblockingLzReceive.selector, _srcChainId, _srcAddress, _nonce, _payload)
+        );
         // try-catch all errors/exceptions
         if (!success) {
             _storeFailedMessage(_srcChainId, _srcAddress, _nonce, _payload, reason);
         }
     }
 
-    function _storeFailedMessage(uint16 _srcChainId, bytes memory _srcAddress, uint64 _nonce, bytes memory _payload, bytes memory _reason) internal virtual {
+    function _storeFailedMessage(
+        uint16 _srcChainId,
+        bytes memory _srcAddress,
+        uint64 _nonce,
+        bytes memory _payload,
+        bytes memory _reason
+    ) internal virtual {
         failedMessages[_srcChainId][_srcAddress][_nonce] = keccak256(_payload);
         emit MessageFailed(_srcChainId, _srcAddress, _nonce, _payload, _reason);
     }

@@ -8,4 +8,6 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol"
 /**
  * @dev Interface of the ONFT Upgradeable standard
  */
-interface IONFT721Upgradeable is IONFT721CoreUpgradeable, IERC721Upgradeable {}
+interface IONFT721Upgradeable is IONFT721CoreUpgradeable, IERC721Upgradeable {
+
+}

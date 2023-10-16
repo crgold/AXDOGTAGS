@@ -9,7 +9,12 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/ERC721Upgradeable.sol";
 // NOTE: this ONFT contract has no public minting logic.
 // must implement your own minting logic in child classes
 contract ONFT721Upgradeable is Initializable, ONFT721CoreUpgradeable, ERC721Upgradeable, IONFT721Upgradeable {
-    function __ONFT721Upgradeable_init(string memory _name, string memory _symbol, uint256 _minGasToTransfer, address _lzEndpoint) internal onlyInitializing {
+    function __ONFT721Upgradeable_init(
+        string memory _name,
+        string memory _symbol,
+        uint256 _minGasToTransfer,
+        address _lzEndpoint
+    ) internal onlyInitializing {
         __ERC721_init_unchained(_name, _symbol);
         __Ownable_init_unchained();
         __LzAppUpgradeable_init_unchained(_lzEndpoint);
@@ -18,7 +23,9 @@ contract ONFT721Upgradeable is Initializable, ONFT721CoreUpgradeable, ERC721Upgr
 
     function __ONFT721Upgradeable_init_unchained() internal onlyInitializing {}
 
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ONFT721CoreUpgradeable, ERC721Upgradeable, IERC165Upgradeable) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ONFT721CoreUpgradeable, ERC721Upgradeable, IERC165Upgradeable) returns (bool) {
         return interfaceId == type(IONFT721Upgradeable).interfaceId || super.supportsInterface(interfaceId);
     }
 

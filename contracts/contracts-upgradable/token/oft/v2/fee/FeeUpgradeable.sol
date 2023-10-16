@@ -26,7 +26,6 @@ abstract contract FeeUpgradeable is OwnableUpgradeable {
 
     function __FeeUpgradeable_init_unchained() internal onlyInitializing {}
 
-
     function setDefaultFeeBp(uint16 _feeBp) public virtual onlyOwner {
         require(_feeBp <= BP_DENOMINATOR, "Fee: fee bp must be <= BP_DENOMINATOR");
         defaultFeeBp = _feeBp;
@@ -45,12 +44,12 @@ abstract contract FeeUpgradeable is OwnableUpgradeable {
         emit SetFeeOwner(_feeOwner);
     }
 
-    function quoteOFTFee(uint16 _dstChainId, uint _amount) public virtual view returns (uint fee) {
+    function quoteOFTFee(uint16 _dstChainId, uint _amount) public view virtual returns (uint fee) {
         FeeConfig memory config = chainIdToFeeBps[_dstChainId];
         if (config.enabled) {
-            fee = _amount * config.feeBP / BP_DENOMINATOR;
+            fee = (_amount * config.feeBP) / BP_DENOMINATOR;
         } else if (defaultFeeBp > 0) {
-            fee = _amount * defaultFeeBp / BP_DENOMINATOR;
+            fee = (_amount * defaultFeeBp) / BP_DENOMINATOR;
         } else {
             fee = 0;
         }

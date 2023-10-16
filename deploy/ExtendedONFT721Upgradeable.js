@@ -32,7 +32,14 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.baseUri, tokenConfig.royaltyBasePoints || 0, tokenConfig.minGas || 100000, lzEndpointAddress],
+                    args: [
+                        tokenConfig.name,
+                        tokenConfig.symbol,
+                        tokenConfig.baseUri,
+                        tokenConfig.royaltyBasePoints || 0,
+                        tokenConfig.minGas || 100000,
+                        lzEndpointAddress,
+                    ],
                 },
             },
         },

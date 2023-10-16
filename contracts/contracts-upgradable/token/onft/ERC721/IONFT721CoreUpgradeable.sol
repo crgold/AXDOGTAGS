@@ -30,14 +30,31 @@ interface IONFT721CoreUpgradeable is IERC165Upgradeable {
      * `_zroPaymentAddress` set to address(0x0) if not paying in ZRO (LayerZero Token)
      * `_adapterParams` is a flexible bytes array to indicate messaging adapter services
      */
-    function sendFrom(address _from, uint16 _dstChainId, bytes calldata _toAddress, uint _tokenId, address payable _refundAddress, address _zroPaymentAddress, bytes calldata _adapterParams) external payable;
+    function sendFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint _tokenId,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes calldata _adapterParams
+    ) external payable;
+
     /**
      * @dev send tokens `_tokenIds[]` to (`_dstChainId`, `_toAddress`) from `_from`
      * `_toAddress` can be any size depending on the `dstChainId`.
      * `_zroPaymentAddress` set to address(0x0) if not paying in ZRO (LayerZero Token)
      * `_adapterParams` is a flexible bytes array to indicate messaging adapter services
      */
-    function sendBatchFrom(address _from, uint16 _dstChainId, bytes calldata _toAddress, uint[] calldata _tokenIds, address payable _refundAddress, address _zroPaymentAddress, bytes calldata _adapterParams) external payable;
+    function sendBatchFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint[] calldata _tokenIds,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes calldata _adapterParams
+    ) external payable;
 
     /**
      * @dev estimate send token `_tokenId` to (`_dstChainId`, `_toAddress`)
@@ -47,7 +64,14 @@ interface IONFT721CoreUpgradeable is IERC165Upgradeable {
      * _useZro - indicates to use zro to pay L0 fees
      * _adapterParams - flexible bytes array to indicate messaging adapter services in L0
      */
-    function estimateSendFee(uint16 _dstChainId, bytes calldata _toAddress, uint _tokenId, bool _useZro, bytes calldata _adapterParams) external view returns (uint nativeFee, uint zroFee);
+    function estimateSendFee(
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint _tokenId,
+        bool _useZro,
+        bytes calldata _adapterParams
+    ) external view returns (uint nativeFee, uint zroFee);
+
     /**
      * @dev estimate send token `_tokenId` to (`_dstChainId`, `_toAddress`)
      * _dstChainId - L0 defined chain id to send tokens too
@@ -56,5 +80,11 @@ interface IONFT721CoreUpgradeable is IERC165Upgradeable {
      * _useZro - indicates to use zro to pay L0 fees
      * _adapterParams - flexible bytes array to indicate messaging adapter services in L0
      */
-    function estimateSendBatchFee(uint16 _dstChainId, bytes calldata _toAddress, uint[] calldata _tokenIds, bool _useZro, bytes calldata _adapterParams) external view returns (uint nativeFee, uint zroFee);
+    function estimateSendBatchFee(
+        uint16 _dstChainId,
+        bytes calldata _toAddress,
+        uint[] calldata _tokenIds,
+        bool _useZro,
+        bytes calldata _adapterParams
+    ) external view returns (uint nativeFee, uint zroFee);
 }

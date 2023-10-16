@@ -7,8 +7,13 @@ import "../../../lzApp/NonblockingLzAppUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-
-abstract contract ONFT721CoreUpgradeable is Initializable, NonblockingLzAppUpgradeable, ERC165Upgradeable, ReentrancyGuardUpgradeable, IONFT721CoreUpgradeable {
+abstract contract ONFT721CoreUpgradeable is
+    Initializable,
+    NonblockingLzAppUpgradeable,
+    ERC165Upgradeable,
+    ReentrancyGuardUpgradeable,
+    IONFT721CoreUpgradeable
+{
     uint16 public constant FUNCTION_TYPE_SEND = 1;
 
     struct StoredCredit {
@@ -38,24 +43,60 @@ abstract contract ONFT721CoreUpgradeable is Initializable, NonblockingLzAppUpgra
         return interfaceId == type(IONFT721CoreUpgradeable).interfaceId || super.supportsInterface(interfaceId);
     }
 
-    function estimateSendFee(uint16 _dstChainId, bytes memory _toAddress, uint _tokenId, bool _useZro, bytes memory _adapterParams) public view virtual override returns (uint nativeFee, uint zroFee) {
+    function estimateSendFee(
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint _tokenId,
+        bool _useZro,
+        bytes memory _adapterParams
+    ) public view virtual override returns (uint nativeFee, uint zroFee) {
         return estimateSendBatchFee(_dstChainId, _toAddress, _toSingletonArray(_tokenId), _useZro, _adapterParams);
     }
 
-    function estimateSendBatchFee(uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, bool _useZro, bytes memory _adapterParams) public view virtual override returns (uint nativeFee, uint zroFee) {
+    function estimateSendBatchFee(
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        bool _useZro,
+        bytes memory _adapterParams
+    ) public view virtual override returns (uint nativeFee, uint zroFee) {
         bytes memory payload = abi.encode(_toAddress, _tokenIds);
         return lzEndpoint.estimateFees(_dstChainId, address(this), payload, _useZro, _adapterParams);
     }
 
-    function sendFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint _tokenId, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) public payable virtual override {
+    function sendFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint _tokenId,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) public payable virtual override {
         _send(_from, _dstChainId, _toAddress, _toSingletonArray(_tokenId), _refundAddress, _zroPaymentAddress, _adapterParams);
     }
 
-    function sendBatchFrom(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) public payable virtual override {
+    function sendBatchFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) public payable virtual override {
         _send(_from, _dstChainId, _toAddress, _tokenIds, _refundAddress, _zroPaymentAddress, _adapterParams);
     }
 
-    function _send(address _from, uint16 _dstChainId, bytes memory _toAddress, uint[] memory _tokenIds, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual {
+    function _send(
+        address _from,
+        uint16 _dstChainId,
+        bytes memory _toAddress,
+        uint[] memory _tokenIds,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual {
         // allow 1 by default
         require(_tokenIds.length > 0, "LzApp: tokenIds[] is empty");
         require(_tokenIds.length == 1 || _tokenIds.length <= dstChainIdToBatchLimit[_dstChainId], "ONFT721: batch size exceeds dst batch limit");
@@ -74,7 +115,7 @@ abstract contract ONFT721CoreUpgradeable is Initializable, NonblockingLzAppUpgra
     function _nonblockingLzReceive(
         uint16 _srcChainId,
         bytes memory _srcAddress,
-        uint64, /*_nonce*/
+        uint64 /*_nonce*/,
         bytes memory _payload
     ) internal virtual override {
         // decode and load the toAddress
@@ -103,7 +144,12 @@ abstract contract ONFT721CoreUpgradeable is Initializable, NonblockingLzAppUpgra
 
         (, uint[] memory tokenIds) = abi.decode(_payload, (bytes, uint[]));
 
-        uint nextIndex = _creditTill(storedCredits[hashedPayload].srcChainId, storedCredits[hashedPayload].toAddress, storedCredits[hashedPayload].index, tokenIds);
+        uint nextIndex = _creditTill(
+            storedCredits[hashedPayload].srcChainId,
+            storedCredits[hashedPayload].toAddress,
+            storedCredits[hashedPayload].index,
+            tokenIds
+        );
         require(nextIndex > storedCredits[hashedPayload].index, "ONFT721: not enough gas to process credit transfer");
 
         if (nextIndex == tokenIds.length) {
@@ -112,13 +158,18 @@ abstract contract ONFT721CoreUpgradeable is Initializable, NonblockingLzAppUpgra
             emit CreditCleared(hashedPayload);
         } else {
             // store the next index to mint
-            storedCredits[hashedPayload] = StoredCredit(storedCredits[hashedPayload].srcChainId, storedCredits[hashedPayload].toAddress, nextIndex, true);
+            storedCredits[hashedPayload] = StoredCredit(
+                storedCredits[hashedPayload].srcChainId,
+                storedCredits[hashedPayload].toAddress,
+                nextIndex,
+                true
+            );
         }
     }
 
     // When a srcChain has the ability to transfer more chainIds in a single tx than the dst can do.
     // Needs the ability to iterate and stop if the minGasToTransferAndStore is not met
-    function _creditTill(uint16 _srcChainId, address _toAddress, uint _startIndex, uint[] memory _tokenIds) internal returns (uint256){
+    function _creditTill(uint16 _srcChainId, address _toAddress, uint _startIndex, uint[] memory _tokenIds) internal returns (uint256) {
         uint i = _startIndex;
         while (i < _tokenIds.length) {
             // if not enough gas to process, store this index for next loop

@@ -8,11 +8,7 @@ module.exports = async function (taskArgs, hre) {
     const pingPong = await ethers.getContract("PingPong")
     console.log(`[source] pingPong.address: ${pingPong.address}`)
 
-    let tx = await (
-        await pingPong.ping(
-            dstChainId,
-        )
-    ).wait()
+    let tx = await (await pingPong.ping(dstChainId)).wait()
     console.log(`✅ Pings started! [${hre.network.name}] pinging with target chain [${dstChainId}] @ [${dstPingPongAddr}]`)
     console.log(`...tx: ${tx.transactionHash}`)
 }

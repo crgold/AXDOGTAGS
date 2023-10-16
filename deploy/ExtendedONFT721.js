@@ -19,7 +19,14 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
 
     await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [tokenConfig.name, tokenConfig.symbol, tokenConfig.baseUri, tokenConfig.royaltyBasePoints || 0, tokenConfig.minGas || 100000, lzEndpointAddress],
+        args: [
+            tokenConfig.name,
+            tokenConfig.symbol,
+            tokenConfig.baseUri,
+            tokenConfig.royaltyBasePoints || 0,
+            tokenConfig.minGas || 100000,
+            lzEndpointAddress,
+        ],
         log: true,
         waitConfirmations: 1,
     })

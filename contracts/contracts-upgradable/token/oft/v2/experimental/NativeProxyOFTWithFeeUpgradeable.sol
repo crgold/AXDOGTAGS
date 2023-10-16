@@ -14,7 +14,7 @@ import "../fee/BaseOFTWithFeeUpgradeable.sol";
  */
 
 interface INativeMinter {
-  function mintNativeCoin(address addr, uint256 amount) external;
+    function mintNativeCoin(address addr, uint256 amount) external;
 }
 
 contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, Proxied {
@@ -39,8 +39,8 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
     }
 
     /************************************************************************
-    * public functions
-    ************************************************************************/
+     * public functions
+     ************************************************************************/
     // set to 0x0 to burn fee instead
     function setFeeOwner(address _feeOwner) public virtual override onlyOwner {
         feeOwner = _feeOwner;
@@ -56,12 +56,20 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
     }
 
     /************************************************************************
-    * internal functions
-    ************************************************************************/
-    function _send(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual override returns (uint amount) {
+     * internal functions
+     ************************************************************************/
+    function _send(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual override returns (uint amount) {
         _checkAdapterParams(_dstChainId, PT_SEND, _adapterParams, NO_EXTRA_GAS);
 
-        (amount,) = _removeDust(_amount);
+        (amount, ) = _removeDust(_amount);
         require(amount > 0, "NativeProxyOFTWithFee: amount too small");
         uint messageFee = _debitFromNative(amount);
 
@@ -71,10 +79,20 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
         emit SendToChain(_dstChainId, _from, _toAddress, amount);
     }
 
-    function _sendAndCall(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, bytes memory _payload, uint64 _dstGasForCall, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual override returns (uint amount) {
+    function _sendAndCall(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        bytes memory _payload,
+        uint64 _dstGasForCall,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual override returns (uint amount) {
         _checkAdapterParams(_dstChainId, PT_SEND_AND_CALL, _adapterParams, _dstGasForCall);
 
-        (amount,) = _removeDust(_amount);
+        (amount, ) = _removeDust(_amount);
         require(amount > 0, "NativeProxyOFTWithFee: amount too small");
         uint messageFee = _debitFromNative(amount);
 

@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "./OFTWithFeeUpgradeable.sol";
 
 contract NativeOFTWithFeeUpgradeable is OFTWithFeeUpgradeable, ReentrancyGuardUpgradeable {
-
     event Deposit(address indexed _dst, uint _amount);
     event Withdrawal(address indexed _src, uint _amount);
 
@@ -23,10 +22,18 @@ contract NativeOFTWithFeeUpgradeable is OFTWithFeeUpgradeable, ReentrancyGuardUp
         emit Withdrawal(msg.sender, _amount);
     }
 
-    function _send(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual override returns (uint amount) {
+    function _send(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual override returns (uint amount) {
         _checkAdapterParams(_dstChainId, PT_SEND, _adapterParams, NO_EXTRA_GAS);
 
-        (amount,) = _removeDust(_amount);
+        (amount, ) = _removeDust(_amount);
         require(amount > 0, "NativeOFTWithFee: amount too small");
         uint messageFee = _debitFromNative(_from, amount);
 
@@ -36,10 +43,20 @@ contract NativeOFTWithFeeUpgradeable is OFTWithFeeUpgradeable, ReentrancyGuardUp
         emit SendToChain(_dstChainId, _from, _toAddress, amount);
     }
 
-    function _sendAndCall(address _from, uint16 _dstChainId, bytes32 _toAddress, uint _amount, bytes memory _payload, uint64 _dstGasForCall, address payable _refundAddress, address _zroPaymentAddress, bytes memory _adapterParams) internal virtual override returns (uint amount) {
+    function _sendAndCall(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        bytes memory _payload,
+        uint64 _dstGasForCall,
+        address payable _refundAddress,
+        address _zroPaymentAddress,
+        bytes memory _adapterParams
+    ) internal virtual override returns (uint amount) {
         _checkAdapterParams(_dstChainId, PT_SEND_AND_CALL, _adapterParams, _dstGasForCall);
 
-        (amount,) = _removeDust(_amount);
+        (amount, ) = _removeDust(_amount);
         require(amount > 0, "NativeOFTWithFee: amount too small");
         uint messageFee = _debitFromNative(_from, amount);
 
@@ -101,7 +118,7 @@ contract NativeOFTWithFeeUpgradeable is OFTWithFeeUpgradeable, ReentrancyGuardUp
         return messageFee;
     }
 
-    function _creditTo(uint16, address _toAddress, uint _amount) internal override returns(uint) {
+    function _creditTo(uint16, address _toAddress, uint _amount) internal override returns (uint) {
         _burn(address(this), _amount);
         (bool success, ) = _toAddress.call{value: _amount}("");
         require(success, "NativeOFTWithFee: failed to _creditTo");

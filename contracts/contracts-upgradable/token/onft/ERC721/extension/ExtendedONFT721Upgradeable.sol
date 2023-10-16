@@ -10,7 +10,16 @@ import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721Royalt
 import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/ERC721EnumerableUpgradeable.sol";
 import "../ONFT721Upgradeable.sol";
 
-contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradeable, ERC721Upgradeable, ERC721RoyaltyUpgradeable, ERC721EnumerableUpgradeable, ERC721BurnableUpgradeable, ONFT721Upgradeable, Proxied {
+contract ExtendedONFT721Upgradeable is
+    OwnableUpgradeable,
+    AccessControlUpgradeable,
+    ERC721Upgradeable,
+    ERC721RoyaltyUpgradeable,
+    ERC721EnumerableUpgradeable,
+    ERC721BurnableUpgradeable,
+    ONFT721Upgradeable,
+    Proxied
+{
     using StringsUpgradeable for uint256;
 
     string internal baseTokenURI;
@@ -24,11 +33,25 @@ contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradea
         _disableInitializers();
     }
 
-    function initialize(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) public virtual initializer {
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        string memory _baseUri,
+        uint96 _royaltyBasePoints,
+        uint256 _minGasToTransfer,
+        address _lzEndpoint
+    ) public virtual initializer {
         __ExtendedONFT721Upgradeable_init(_name, _symbol, _baseUri, _royaltyBasePoints, _minGasToTransfer, _lzEndpoint);
     }
 
-    function __ExtendedONFT721Upgradeable_init(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) internal onlyInitializing {
+    function __ExtendedONFT721Upgradeable_init(
+        string memory _name,
+        string memory _symbol,
+        string memory _baseUri,
+        uint96 _royaltyBasePoints,
+        uint256 _minGasToTransfer,
+        address _lzEndpoint
+    ) internal onlyInitializing {
         __ERC721_init_unchained(_name, _symbol);
 
         __Ownable_init_unchained();
@@ -91,7 +114,15 @@ contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradea
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ONFT721Upgradeable, ERC721RoyaltyUpgradeable, ERC721EnumerableUpgradeable, ERC721Upgradeable, AccessControlUpgradeable) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    )
+        public
+        view
+        virtual
+        override(ONFT721Upgradeable, ERC721RoyaltyUpgradeable, ERC721EnumerableUpgradeable, ERC721Upgradeable, AccessControlUpgradeable)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId);
     }
 
@@ -116,7 +147,12 @@ contract ExtendedONFT721Upgradeable is OwnableUpgradeable, AccessControlUpgradea
     /**
      * @dev See {ERC721-_beforeTokenTransfer}.
      */
-    function _beforeTokenTransfer(address from, address to, uint256 firstTokenId, uint256 batchSize) internal virtual override(ERC721EnumerableUpgradeable, ERC721Upgradeable) {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 firstTokenId,
+        uint256 batchSize
+    ) internal virtual override(ERC721EnumerableUpgradeable, ERC721Upgradeable) {
         super._beforeTokenTransfer(from, to, firstTokenId, batchSize);
     }
 

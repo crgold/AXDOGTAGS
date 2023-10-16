@@ -25,9 +25,7 @@ contract ProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable,
 
         innerToken = IERC20Upgradeable(_token);
 
-        (bool success, bytes memory data) = _token.staticcall(
-            abi.encodeWithSignature("decimals()")
-        );
+        (bool success, bytes memory data) = _token.staticcall(abi.encodeWithSignature("decimals()"));
         require(success, "ProxyOFTWithFee: failed to get token decimals");
         uint8 decimals = abi.decode(data, (uint8));
 
@@ -36,8 +34,8 @@ contract ProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable,
     }
 
     /************************************************************************
-    * public functions
-    ************************************************************************/
+     * public functions
+     ************************************************************************/
     function circulatingSupply() public view virtual override returns (uint) {
         return innerToken.totalSupply() - outboundAmount;
     }
@@ -47,8 +45,8 @@ contract ProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable,
     }
 
     /************************************************************************
-    * internal functions
-    ************************************************************************/
+     * internal functions
+     ************************************************************************/
     function _debitFrom(address _from, uint16, bytes32, uint _amount) internal virtual override returns (uint) {
         require(_from == _msgSender(), "ProxyOFTWithFee: owner is not send caller");
 

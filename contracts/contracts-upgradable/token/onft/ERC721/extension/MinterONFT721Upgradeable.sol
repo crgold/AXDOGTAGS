@@ -11,11 +11,25 @@ contract MinterONFT721Upgradeable is ExtendedONFT721Upgradeable {
      *** Public functions
      ********************************************/
 
-    function initialize(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) public virtual override initializer {
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        string memory _baseUri,
+        uint96 _royaltyBasePoints,
+        uint256 _minGasToTransfer,
+        address _lzEndpoint
+    ) public virtual override initializer {
         __MinterONFT721Upgradeable_init(_name, _symbol, _baseUri, _royaltyBasePoints, _minGasToTransfer, _lzEndpoint);
     }
 
-    function __MinterONFT721Upgradeable_init(string memory _name, string memory _symbol, string memory _baseUri, uint96 _royaltyBasePoints, uint256 _minGasToTransfer, address _lzEndpoint) internal onlyInitializing {
+    function __MinterONFT721Upgradeable_init(
+        string memory _name,
+        string memory _symbol,
+        string memory _baseUri,
+        uint96 _royaltyBasePoints,
+        uint256 _minGasToTransfer,
+        address _lzEndpoint
+    ) internal onlyInitializing {
         __ERC721_init_unchained(_name, _symbol);
 
         __Ownable_init_unchained();

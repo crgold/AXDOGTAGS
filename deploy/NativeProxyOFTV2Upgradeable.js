@@ -13,8 +13,8 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
         lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     }
 
-    const decimals = 18;
-    const sharedDecimals = 6;
+    const decimals = 18
+    const sharedDecimals = 6
 
     await deploy("NativeProxyOFTV2Upgradeable", {
         from: deployer,
