@@ -49,7 +49,10 @@ task("ping", "call ping to start the pingPong with the target network", require(
 
 task("getSigners", "show the signers of the current mnemonic", require("./getSigners")).addOptionalParam("n", "how many to show", 3, types.int)
 
-task("approveERC1155", "approve it to transfer my nfts", require("./approveERC1155")).addParam("addr", "the address to approve")
+task("approveERC1155", "approve Omnichain proxy to transfer your ERC1155 tokens", require("./approveERC1155"))
+    .addOptionalParam("contract", "the name of the OFT contract, e.g. 'ProxyONFT'", "")
+    .addOptionalParam("address", "address of the token you want to approve (leave empty to use tokenConfig values)", "")
+    .addOptionalParam("spender", "address that should get an allowance (overrides `contract`)", "")
 
 task("approveERC20", "approve Omnichain proxy to transfer your ERC20 tokens", require("./approveERC20"))
     .addOptionalParam("contract", "the name of the OFT contract, e.g. 'ProxyOFTV2'", "")
@@ -102,14 +105,6 @@ task(
     require("./setTrustedRemote")
 )
     .addParam("targetNetwork", "the target network to set as a trusted remote")
-    .addOptionalParam("localContract", "Name of local contract if the names are different")
-    .addOptionalParam("remoteContract", "Name of remote contract if the names are different")
-    .addOptionalParam("contract", "If both contracts are the same name")
-
-//
-task("oftSend", "send tokens to another chain", require("./oftSend"))
-    .addParam("qty", "qty of tokens to send")
-    .addParam("targetNetwork", "the target network to let this instance receive messages from")
     .addOptionalParam("localContract", "Name of local contract if the names are different")
     .addOptionalParam("remoteContract", "Name of remote contract if the names are different")
     .addOptionalParam("contract", "If both contracts are the same name")

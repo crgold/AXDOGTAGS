@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.18;
 
-import "./ONFT721.sol";
+import "../ONFT721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";

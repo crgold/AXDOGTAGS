@@ -52,10 +52,10 @@ The tables below are meant to help you to find the right contract type to base y
 
 ### Omnichain ERC1155 NFTs
 
-| Ominchain ERC1155 | Token               | Proxy         |
-| :---------------- | :------------------ | :------------ |
-| **Regular**       | ONFT1155            | ProxyONFT1155 |
-| **Upgradeable**   | ONFT1155Upgradeable | (coming soon) |
+| Ominchain ERC1155 | Token               | Proxy                       |
+| :---------------- | :------------------ | :-------------------------- |
+| **Regular**       | ONFT1155            | ProxyONFT1155               |
+| **Upgradeable**   | ONFT1155Upgradeable | ProxyONFT1155Upgradeable`*` |
 
 <br/>
 
@@ -167,8 +167,8 @@ We'll create a contract file in `contracts/examples/MyNFT.sol` with the followin
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.18;
 
-import "../token/onft/extension/ExtendedONFT721.sol";
-import "../token/onft/extension/ProxyONFT721.sol";
+import "../token/onft721/ProxyONFT721.sol";
+import "../token/onft721/extensions/ExtendedONFT721.sol";
 
 contract MyONFTProxy is ProxyONFT721 {}
 

@@ -6,7 +6,7 @@ import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165CheckerUpgradeable.sol";
-import "../ONFT721CoreUpgradeable.sol";
+import "./ONFT721CoreUpgradeable.sol";
 
 contract ProxyONFT721Upgradeable is Initializable, ONFT721CoreUpgradeable, IERC721ReceiverUpgradeable, Proxied {
     using ERC165CheckerUpgradeable for address;
@@ -53,4 +53,6 @@ contract ProxyONFT721Upgradeable is Initializable, ONFT721CoreUpgradeable, IERC7
         if (_operator != address(this)) return bytes4(0);
         return IERC721ReceiverUpgradeable.onERC721Received.selector;
     }
+
+    uint[49] private __gap;
 }
