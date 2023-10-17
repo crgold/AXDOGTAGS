@@ -221,11 +221,11 @@ npx hardhat --network beam-testnet deploy --tags MyONFT
 npx hardhat --network fuji deploy --tags MyONFTProxy
 
 # setup
-npx hardhat --network beam-testnet setupONFT721 --target-network fuji --local-contract MyONFT --remote-contract MyONFTProxy
-npx hardhat --network fuji setupONFT721 --target-network beam-testnet --local-contract MyONFTProxy --remote-contract MyONFT
+npx hardhat --network beam-testnet setupONFT --target-network fuji --local-contract MyONFT --remote-contract MyONFTProxy
+npx hardhat --network fuji setupONFT --target-network beam-testnet --local-contract MyONFTProxy --remote-contract MyONFT
 
 # grant NFT allowance to proxy contract
-npx hardhat --network fuji approveERC721 --contract MyONFTProxy
+npx hardhat --network fuji approveNFT --contract MyONFTProxy
 
 # send NFT #1 from Fuji to Beam Testnet
 npx hardhat --network fuji onftSend --target-network beam-testnet --token-id 1 --contract MyONFTProxy
