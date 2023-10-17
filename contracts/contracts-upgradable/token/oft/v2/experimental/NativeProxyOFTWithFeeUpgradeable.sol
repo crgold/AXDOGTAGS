@@ -2,14 +2,12 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
 import "../fee/BaseOFTWithFeeUpgradeable.sol";
 
 /**
- * This contract is based on "NativeOFTV2" and "ProxyOFTV2", and takes advantage of
- * the "NativeMinter" Avalanche Subnet precompile to mint and burn native currency
- * on-the-fly instead of locking it up.
- *
+ * "NativeMinter" Avalanche Subnet precompile interface
  * https://docs.avax.network/build/subnet/upgrade/customize-a-subnet#minting-native-coins
  */
 
@@ -17,10 +15,17 @@ interface INativeMinter {
     function mintNativeCoin(address addr, uint256 amount) external;
 }
 
-contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, Proxied {
+/**
+ * This contract is based on "NativeOFTV2" and "ProxyOFTV2", and takes advantage of
+ * the "NativeMinter" Avalanche Subnet precompile to mint and burn native currency
+ * on-the-fly instead of locking it up.
+ */
+
+contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgradeable, PausableUpgradeable, Proxied {
     uint internal ld2sdRate;
     uint internal supply;
     INativeMinter internal constant nativeMinter = INativeMinter(address(0x0200000000000000000000000000000000000001));
+    address public constant BURN_ADDRESS = 0x0100000000000000000000000000000000000000;
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -28,23 +33,55 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
     }
 
     function initialize(uint8 _nativeDecimals, uint8 _sharedDecimals, address _lzEndpoint) public initializer {
-        __BaseOFTWithFeeUpgradeable_init(_sharedDecimals, _lzEndpoint);
+        __Ownable_init_unchained();
+        __LzAppUpgradeable_init_unchained(_lzEndpoint);
+        __OFTCoreV2Upgradeable_init_unchained(_sharedDecimals);
+        __Pausable_init_unchained();
 
         require(_sharedDecimals <= _nativeDecimals, "NativeProxyOFTWithFee: sharedDecimals must be <= nativeDecimals");
         ld2sdRate = 10 ** (_nativeDecimals - _sharedDecimals);
     }
 
-    receive() external payable {
-        revert();
-    }
-
     /************************************************************************
      * public functions
      ************************************************************************/
-    // set to 0x0 to burn fee instead
+    // allow 0x0 to burn fee instead
     function setFeeOwner(address _feeOwner) public virtual override onlyOwner {
         feeOwner = _feeOwner;
         emit SetFeeOwner(_feeOwner);
+    }
+
+    // pausable
+    function pause(bool _enable) public virtual onlyOwner {
+        if (_enable) {
+            _pause();
+        } else {
+            _unpause();
+        }
+    }
+
+    function sendFrom(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        uint _minAmount,
+        LzCallParams calldata _callParams
+    ) public payable virtual override whenNotPaused {
+        return super.sendFrom(_from, _dstChainId, _toAddress, _amount, _minAmount, _callParams);
+    }
+
+    function sendAndCall(
+        address _from,
+        uint16 _dstChainId,
+        bytes32 _toAddress,
+        uint _amount,
+        uint _minAmount,
+        bytes calldata _payload,
+        uint64 _dstGasForCall,
+        LzCallParams calldata _callParams
+    ) public payable virtual override whenNotPaused {
+        return super.sendAndCall(_from, _dstChainId, _toAddress, _amount, _minAmount, _payload, _dstGasForCall, _callParams);
     }
 
     function token() public view virtual override returns (address) {
@@ -103,7 +140,7 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
         emit SendToChain(_dstChainId, _from, _toAddress, amount);
     }
 
-    function _debitFromNative(uint _amount) internal virtual returns (uint messageFee) {
+    function _debitFromNative(uint _amount) internal virtual whenNotPaused returns (uint messageFee) {
         require(msg.value >= _amount, "NativeProxyOFTWithFee: Insufficient msg.value");
         // update the messageFee to take out the token amount
         messageFee = msg.value - _amount;
@@ -114,11 +151,11 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
         return messageFee;
     }
 
-    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override returns (uint messageFee) {
+    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override whenNotPaused returns (uint messageFee) {
         return _debitFromNative(_amount);
     }
 
-    function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override returns (uint) {
+    function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override whenNotPaused returns (uint) {
         // mint native tokens
         _mintNative(_toAddress, _amount);
 
@@ -126,7 +163,7 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
     }
 
     // native currency transfer
-    function _transferFrom(address, address _to, uint _amount) internal virtual override returns (uint) {
+    function _transferFrom(address, address _to, uint _amount) internal virtual override whenNotPaused returns (uint) {
         require(msg.value >= _amount, "NativeProxyOFTWithFee: Insufficient msg.value");
 
         (bool success, ) = address(_to).call{value: _amount}("");
@@ -137,7 +174,7 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
     }
 
     // mints native currency (gas tokens) by calling Avalanche's NativeMinter precompile
-    function _mintNative(address _toAddress, uint _amount) internal virtual {
+    function _mintNative(address _toAddress, uint _amount) internal virtual whenNotPaused {
         uint newBalance = msg.sender.balance + _amount;
         nativeMinter.mintNativeCoin(_toAddress, _amount);
 
@@ -149,7 +186,7 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
 
     // burn native tokens sent with tx
     function _burnNative(uint _amount) internal virtual {
-        _transferFrom(address(0), address(0), _amount);
+        _transferFrom(address(0), BURN_ADDRESS, _amount);
 
         // update tracker
         supply = supply > _amount ? supply - _amount : 0;
