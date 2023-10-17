@@ -98,7 +98,7 @@ contract MyUsdcOFT is OFTWithFeeUpgradeable {
 ```
 
 Then we update `constants/tokenConfig.js` and add some config.
-`Proxy` contracts require the `address` of the token they're proxying as input, all other types need a `name` and `symbol` for the token.
+ERC20 `Proxy` contracts require the `address` of the token they're proxying as input, all other types need a `name` and `symbol` for the token.
 
 ```javascript
 {
