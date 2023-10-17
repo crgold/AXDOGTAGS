@@ -48,7 +48,6 @@ The tables below are meant to help you to find the right contract type to base y
 
 - ExtendedONFT721 & ExtendedONFT721Upgradeable `*` (Enumerable _ONFT721_ with on-chain royalties, updatable metadata uri and batch transfers)
 - MinterONFT721 & MinterONFT721Upgradeable `*` (_ExtendedONFT721_ with minting capabilities)
-- DistributeONFT721
 - ONFT721A
 
 ### Omnichain ERC1155 NFTs
