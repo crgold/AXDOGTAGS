@@ -1,4 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
+
+const CONTRACT_NAME = "ProxyONFT1155"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -8,12 +11,18 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     const lzEndpointAddress = LZ_ENDPOINTS[hre.network.name]
     console.log(`[${hre.network.name}] Endpoint Address: ${lzEndpointAddress}`)
 
-    await deploy("ProxyONFT1155", {
+    const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
+    if (!tokenConfig.address) {
+        console.error("No configured token address found for target network.")
+        return
+    }
+
+    await deploy(CONTRACT_NAME, {
         from: deployer,
-        args: [lzEndpointAddress, "0x76BE3b62873462d2142405439777e971754E8E77"],
+        args: [lzEndpointAddress, tokenConfig.address],
         log: true,
         waitConfirmations: 1,
     })
 }
 
-module.exports.tags = ["ProxyONFT1155"]
+module.exports.tags = [CONTRACT_NAME]
