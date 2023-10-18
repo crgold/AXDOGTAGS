@@ -59,28 +59,6 @@ task("approveNFT", "approve Omnichain proxy to transfer your ERC721/1155 tokens"
     .addOptionalParam("address", "address of the token you want to approve (leave empty to use tokenConfig values)", "")
     .addOptionalParam("spender", "address that should get an allowance (overrides `contract`)", "")
 
-task("sendProxyONFT1155", "send a tokenid and quantity", require("./sendProxyONFT1155"))
-    .addParam("targetNetwork", "the destination chainId")
-    .addParam("tokenId", "the NFT tokenId")
-    .addParam("quantity", "the quantity of NFT tokenId to send")
-// .addParam("msgValue", "the lz message value, ie: '0.02' ")
-
-task("sendONFT1155", "send a tokenid and quantity", require("./sendONFT1155"))
-    .addParam("targetNetwork", "the destination chainId")
-    .addParam("tokenId", "the NFT tokenId")
-    .addParam("quantity", "the quantity of NFT tokenId to send")
-    .addParam("msgValue", "the lz message value, ie: '0.02' ")
-
-task("batchSendProxyONFT1155", "send a tokenid and quantity", require("./batchSendProxyONFT1155"))
-    .addParam("targetNetwork", "the destination chainId")
-    .addParam("tokenIds", "the NFT tokenId")
-    .addParam("quantities", "the quantity of NFT tokenId to send")
-
-task("batchSendONFT1155", "send a tokenid and quantity", require("./batchSendONFT1155"))
-    .addParam("targetNetwork", "the destination chainId")
-    .addParam("tokenIds", "the NFT tokenId")
-    .addParam("quantities", "the quantity of NFT tokenId to send")
-
 //
 task("checkWireUp", "check wire up", require("./checkWireUp"))
     .addParam("e", "environment testnet/mainet")
@@ -105,7 +83,7 @@ task(
     .addOptionalParam("contract", "If both contracts are the same name")
 
 //
-task("oftv2Send", "send tokens to another chain", require("./oftv2Send"))
+task("sendOFT", "send tokens to another chain", require("./sendOFT"))
     .addParam("qty", "qty of tokens to send")
     .addParam("targetNetwork", "the target network to let this instance receive messages from")
     .addOptionalParam("localContract", "Name of local contract if the names are different")
@@ -122,10 +100,17 @@ task("ownerOf", "ownerOf(tokenId) to get the owner of a token", require("./owner
     .addParam("tokenId", "the tokenId of ONFT")
 
 //
-task("onftSend", "send an ONFT nftId from one chain to another", require("./onftSend"))
+task("sendONFT712", "send an ONFT nftId from one chain to another", require("./sendONFT712"))
     .addParam("tokenId", "the tokenId of ONFT")
     .addParam("targetNetwork", "the chainId to transfer to")
     .addParam("contract", "ONFT contract name")
+
+//
+task("sendONFT1155", "send an ONFT nftId from one chain to another", require("./sendONFT1155"))
+    .addParam("tokenId", "the tokenId of ONFT")
+    .addParam("targetNetwork", "the chainId to transfer to")
+    .addParam("contract", "ONFT contract name")
+    .addOptionalParam("amount", "number of tokens", 1, types.int)
 
 //
 task("setMinDstGas", "set min gas required on the destination gas", require("./setMinDstGas"))
@@ -189,7 +174,13 @@ task("setupOFT", "go through all steps of the base OFTV2 setup", require("./setu
     .addParam("targetNetwork", "destination network")
     .addOptionalParam("minGas", "gas config", "200000")
 
-task("setupONFT", "go through all steps of the base ONFT setup", require("./setupONFT"))
+task("setupONFT712", "go through all steps of the base ONFT setup", require("./setupONFT712"))
+    .addParam("localContract", "name of contract on source chain")
+    .addParam("remoteContract", "name of contract on destination chain")
+    .addParam("targetNetwork", "destination network")
+    .addOptionalParam("minGas", "gas config", "")
+
+task("setupONFT1155", "go through all steps of the base ONFT setup", require("./setupONFT1155"))
     .addParam("localContract", "name of contract on source chain")
     .addParam("remoteContract", "name of contract on destination chain")
     .addParam("targetNetwork", "destination network")

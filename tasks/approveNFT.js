@@ -29,7 +29,7 @@ module.exports = async function (taskArgs, hre) {
         }
     }
 
-    const NFT = await ethers.getContractFactory("NFT")
+    const NFT = await ethers.getContractFactory("ERC721")
     const nft = await NFT.attach(nftAddress)
 
     console.log(`NFT address: ${nftAddress},\n spender to approve: ${spender}`)
