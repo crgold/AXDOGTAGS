@@ -97,7 +97,7 @@ contract ExtendedONFT721Upgradeable is
     /**
      * @dev Set new token metadata base URI.
      */
-    function setBaseURI(string memory _baseUri) public virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setBaseURI(string memory _baseUri) public virtual onlyOwner {
         baseTokenURI = _baseUri;
     }
 
