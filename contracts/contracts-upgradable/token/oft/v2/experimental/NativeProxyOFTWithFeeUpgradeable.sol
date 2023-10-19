@@ -12,6 +12,7 @@ import "../fee/BaseOFTWithFeeUpgradeable.sol";
  */
 
 interface INativeMinter {
+    // Mint [amount] number of native coins and send to [addr]
     function mintNativeCoin(address addr, uint256 amount) external;
 }
 
@@ -151,7 +152,7 @@ contract NativeProxyOFTWithFeeUpgradeable is Initializable, BaseOFTWithFeeUpgrad
         return messageFee;
     }
 
-    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override whenNotPaused returns (uint messageFee) {
+    function _debitFrom(address, uint16, bytes32, uint _amount) internal virtual override whenNotPaused returns (uint) {
         return _debitFromNative(_amount);
     }
 
