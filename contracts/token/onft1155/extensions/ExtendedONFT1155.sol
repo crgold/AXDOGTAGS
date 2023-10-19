@@ -2,66 +2,28 @@
 
 pragma solidity ^0.8.18;
 
-import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
-import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/common/ERC2981Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155BurnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155SupplyUpgradeable.sol";
-import "../ONFT1155Upgradeable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/common/ERC2981.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
+import "../ONFT1155.sol";
 
-contract ExtendedONFT1155Upgradeable is
-    Initializable,
-    OwnableUpgradeable,
-    AccessControlUpgradeable,
-    ERC1155Upgradeable,
-    ERC1155SupplyUpgradeable,
-    ERC1155BurnableUpgradeable,
-    ERC2981Upgradeable,
-    ONFT1155Upgradeable,
-    Proxied
-{
+contract ExtendedONFT1155 is Ownable, AccessControl, ERC1155, ERC1155Supply, ERC1155Burnable, ERC2981, ONFT1155 {
     string public name;
     string public symbol;
 
     /********************************************
-     *** Initializers
+     *** Constructor
      ********************************************/
 
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() {
-        _disableInitializers();
-    }
-
-    function initialize(
+    constructor(
         string memory _name,
         string memory _symbol,
         string memory _uri,
         uint96 _royaltyBasePoints,
         address _lzEndpoint
-    ) public virtual initializer {
-        __ExtendedONFT1155Upgradeable_init(_name, _symbol, _uri, _royaltyBasePoints, _lzEndpoint);
-    }
-
-    function __ExtendedONFT1155Upgradeable_init(
-        string memory _name,
-        string memory _symbol,
-        string memory _uri,
-        uint96 _royaltyBasePoints,
-        address _lzEndpoint
-    ) internal onlyInitializing {
-        __ERC1155_init_unchained(_uri);
-        __Ownable_init_unchained();
-        __LzAppUpgradeable_init_unchained(_lzEndpoint);
-
-        __ExtendedONFT721Upgradeable_init_unchained(_name, _symbol, _royaltyBasePoints);
-    }
-
-    function __ExtendedONFT721Upgradeable_init_unchained(
-        string memory _name,
-        string memory _symbol,
-        uint96 _royaltyBasePoints
-    ) internal onlyInitializing {
+    ) ONFT1155(_uri, _lzEndpoint) {
         name = _name;
         symbol = _symbol;
 
@@ -133,9 +95,7 @@ contract ExtendedONFT1155Upgradeable is
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(
-        bytes4 interfaceId
-    ) public view virtual override(ERC1155Upgradeable, ERC2981Upgradeable, ONFT1155Upgradeable, AccessControlUpgradeable) returns (bool) {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC1155, ERC2981, ONFT1155, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
 
@@ -153,7 +113,7 @@ contract ExtendedONFT1155Upgradeable is
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) internal virtual override(ERC1155Upgradeable, ERC1155SupplyUpgradeable) {
+    ) internal virtual override(ERC1155, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 
