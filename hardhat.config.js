@@ -3,12 +3,12 @@ require("dotenv").config()
 require("@nomiclabs/hardhat-etherscan")
 require("@nomiclabs/hardhat-waffle")
 require("@openzeppelin/hardhat-upgrades")
-require("hardhat-contract-sizer")
 require("hardhat-deploy")
 require("hardhat-deploy-ethers")
-require("hardhat-gas-reporter")
 require("solidity-coverage")
 require("./tasks")
+// require("hardhat-contract-sizer")
+// require("hardhat-gas-reporter")
 
 // This is a sample Hardhat task. To learn how to create your own go to
 // https://hardhat.org/guides/create-task.html
