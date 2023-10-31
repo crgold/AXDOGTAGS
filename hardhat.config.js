@@ -37,6 +37,10 @@ function getMnemonic(networkName) {
 }
 
 function accounts(networkName) {
+    if (process.env.DEPLOYER_KEY && process.env.PROXY_OWNER_KEY) {
+        return [`${process.env.DEPLOYER_KEY}`, `${process.env.PROXY_OWNER_KEY}`]
+    }
+
     return { mnemonic: getMnemonic(networkName) }
 }
 

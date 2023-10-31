@@ -5,23 +5,25 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // this is a MOCK
 abstract contract Faucet is ERC20 {
-    mapping (address => uint256) public lastClaimedAt;
-    uint256 public faucetAmount = 100 * 1000000;
-    uint256 public cooldownPeriod = 3600;
+    mapping(address => uint256) public lastClaimedAt;
+    uint256 public constant FAUCET_DRIP = 100; // eth
+    uint256 public constant COOLDOWN = 3600; // sec
+    uint256 internal pow;
 
     constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {
-        _mint(msg.sender, 100000000 * 1000000);
+        pow = 10 ** decimals();
+        _mint(msg.sender, 100000000 * pow);
     }
 
     function canClaim(address account) public view returns (bool) {
-        return lastClaimedAt[account] + cooldownPeriod < block.timestamp;
+        return lastClaimedAt[account] + COOLDOWN < block.timestamp;
     }
 
     function claim() external {
         require(canClaim(msg.sender), "wallet claimed recently");
 
         lastClaimedAt[msg.sender] = block.timestamp;
-        _mint(msg.sender, faucetAmount);
+        _mint(msg.sender, FAUCET_DRIP * pow);
     }
 }
 
@@ -39,6 +41,6 @@ contract USDTMock is USDFaucet {
     constructor() Faucet("Tether USD", "USDT") {}
 }
 
-contract MCMock is Faucet {
-    constructor() Faucet("Merit Circle", "MC") {}
+contract BeamMock is Faucet {
+    constructor() Faucet("Beam", "BEAM") {}
 }
