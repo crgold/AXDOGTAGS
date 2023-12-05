@@ -34,6 +34,11 @@ module.exports = {
             symbol: "AVAX",
             withFee: true,
         },
+        GobOFT: {
+            name: "Goons of Balatroon",
+            symbol: "GOB",
+            withFee: true,
+        },
     },
     "beam-testnet": {
         BeamNativeOFT: {
@@ -141,6 +146,13 @@ module.exports = {
             symbol: "LZAVAX",
             withFee: true,
             isNative: true,
+            minGas: 10000000,
+        },
+    },
+    arbitrum: {
+        GobProxyOFT: {
+            address: "0xa2f9ecf83a48b86265ff5fd36cdbaaa1f349916c", // USDT
+            withFee: true,
             minGas: 10000000,
         },
     },
