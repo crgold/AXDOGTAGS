@@ -258,9 +258,10 @@ The LayerZero protocol is active on a wide selection of [test](https://layerzero
 
 Currently, both Beam test- and mainnet connect to
 
-- Ethereum (Goerli on testnet)
+- Ethereum (Goerli & Sepolia on testnet)
 - Avalanche C-Chain
 - BNB Smart Chain
 - Fantom
+- Arbitrum
 
 If your project requires interconnectivity with another network, [the Beam team](mailto:hello@onbeam.com) is happy to help!

@@ -171,7 +171,8 @@ task("setupOFT", "go through all steps of the base OFTV2 setup", require("./setu
     .addParam("localContract", "name of contract on source chain")
     .addParam("remoteContract", "name of contract on destination chain")
     .addParam("targetNetwork", "destination network")
-    .addOptionalParam("minGas", "gas config", "200000")
+    .addOptionalParam("minGas", "gas config", "")
+    .addOptionalParam("skipAdapter", "skip setting custom adapter params", false, types.boolean)
 
 task("setupONFT712", "go through all steps of the base ONFT setup", require("./setupONFT712"))
     .addParam("localContract", "name of contract on source chain")

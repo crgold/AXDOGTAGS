@@ -2,7 +2,7 @@ const setTrustedRemote = require("./setTrustedRemote")
 const setMinDstGas = require("./setMinDstGas")
 const setCustomAdapterParams = require("./setCustomAdapterParams")
 
-module.exports = async function ({ localContract, remoteContract, targetNetwork, minGas: minDstGas }, hre) {
+module.exports = async function ({ localContract, remoteContract, targetNetwork, minGas: minDstGas, skipAdapter }, hre) {
     let minGas = minDstGas
     if (!minGas) {
         if (TOKEN_CONFIG[targetNetwork] && TOKEN_CONFIG[targetNetwork][remoteContract] && TOKEN_CONFIG[targetNetwork][remoteContract].minGas) {
@@ -43,11 +43,15 @@ module.exports = async function ({ localContract, remoteContract, targetNetwork,
         hre
     )
 
-    console.log("\nsetting custom adapter params...\n")
-    await setCustomAdapterParams(
-        {
-            contract: localContract,
-        },
-        hre
-    )
+    if (!skipAdapter) {
+        console.log("\nsetting custom adapter params...\n")
+        await setCustomAdapterParams(
+            {
+                contract: localContract,
+            },
+            hre
+        )
+    } else {
+        console.log("\nskipped setting custom adapter params.\n")
+    }
 }
