@@ -153,6 +153,11 @@ module.exports = {
             isNative: true,
             minGas: 10000000,
         },
+        BeamOFT: {
+            name: "Beam",
+            symbol: "BEAM",
+            withFee: true,
+        },
     },
     arbitrum: {
         GobProxyOFT: {
