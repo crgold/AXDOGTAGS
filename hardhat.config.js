@@ -165,6 +165,12 @@ const networks = {
         accounts: accounts(),
         verify: verifyChain("goerli"),
     },
+    sepolia: {
+        url: "https://ethereum-sepolia.publicnode.com",
+        chainId: 11155111,
+        accounts: accounts(),
+        verify: verifyChain("sepolia"),
+    },
     "bsc-testnet": {
         url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
         chainId: 97,
