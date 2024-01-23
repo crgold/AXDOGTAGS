@@ -1,6 +1,7 @@
 const setTrustedRemote = require("./setTrustedRemote")
 const setMinDstGas = require("./setMinDstGas")
 const setCustomAdapterParams = require("./setCustomAdapterParams")
+const TOKEN_CONFIG = require("../constants/tokenConfig")
 
 module.exports = async function ({ localContract, remoteContract, targetNetwork, minGas: minDstGas, skipAdapter }, hre) {
     let minGas = minDstGas
