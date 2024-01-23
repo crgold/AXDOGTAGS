@@ -39,6 +39,11 @@ module.exports = {
             symbol: "GOB",
             withFee: true,
         },
+        DomiOFT: {
+            name: "Domi",
+            symbol: "DOMI",
+            withFee: true,
+        },
     },
     "beam-testnet": {
         BeamNativeOFT: {
@@ -105,6 +110,11 @@ module.exports = {
             withFee: true,
             minGas: 10000000,
         },
+        DomiProxyOFT: {
+            address: "0x45c2f8c9b4c0bdc76200448cc26c48ab6ffef83f",
+            withFee: true,
+            minGas: 10000000,
+        },
     },
     goerli: {
         BeamProxyOFT: {
@@ -136,6 +146,11 @@ module.exports = {
             symbol: "BEAM",
             withFee: true,
         },
+        DomiProxyOFT: {
+            address: "0xFc6Da929c031162841370af240dEc19099861d3B",
+            withFee: true,
+            minGas: 10000000,
+        },
     },
     fuji: {
         ProxyOFTWithFeeUpgradeable: {
@@ -162,6 +177,13 @@ module.exports = {
     arbitrum: {
         GobProxyOFT: {
             address: "0xa2f9ecf83a48b86265ff5fd36cdbaaa1f349916c", // USDT
+            withFee: true,
+            minGas: 10000000,
+        },
+    },
+    bsc: {
+        DomiProxyOFT: {
+            address: "0xbbca42c60b5290f2c48871a596492f93ff0ddc82",
             withFee: true,
             minGas: 10000000,
         },
