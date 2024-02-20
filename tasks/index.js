@@ -99,7 +99,7 @@ task("ownerOf", "ownerOf(tokenId) to get the owner of a token", require("./owner
     .addParam("tokenId", "the tokenId of ONFT")
 
 //
-task("sendONFT712", "send an ONFT nftId from one chain to another", require("./sendONFT712"))
+task("sendONFT721", "send an ONFT nftId from one chain to another", require("./sendONFT721"))
     .addParam("tokenId", "the tokenId of ONFT")
     .addParam("targetNetwork", "the chainId to transfer to")
     .addParam("contract", "ONFT contract name")

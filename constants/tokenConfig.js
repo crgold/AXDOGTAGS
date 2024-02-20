@@ -111,7 +111,7 @@ module.exports = {
             minGas: 10000000,
         },
         DomiProxyOFT: {
-            address: "0x45c2f8c9b4c0bdc76200448cc26c48ab6ffef83f",
+            address: "0x45C2F8c9B4c0bDC76200448cc26C48ab6ffef83F",
             withFee: true,
             minGas: 10000000,
         },
@@ -183,7 +183,7 @@ module.exports = {
     },
     bsc: {
         DomiProxyOFT: {
-            address: "0xbbca42c60b5290f2c48871a596492f93ff0ddc82",
+            address: "0xBBCA42c60b5290F2c48871A596492F93fF0Ddc82",
             withFee: true,
             minGas: 10000000,
         },
