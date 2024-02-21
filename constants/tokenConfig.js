@@ -44,6 +44,11 @@ module.exports = {
             symbol: "DOMI",
             withFee: true,
         },
+        FpOFT: {
+            name: "Forgotten Playland",
+            symbol: "FP",
+            withFee: true,
+        },
     },
     "beam-testnet": {
         BeamNativeOFT: {
@@ -112,6 +117,11 @@ module.exports = {
         },
         DomiProxyOFT: {
             address: "0x45C2F8c9B4c0bDC76200448cc26C48ab6ffef83F",
+            withFee: true,
+            minGas: 10000000,
+        },
+        FpProxyOFT: {
+            address: "0xEeee2A2E650697d2A8e8BC990C2f3d04203bE06f",
             withFee: true,
             minGas: 10000000,
         },
