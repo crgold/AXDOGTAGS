@@ -44,7 +44,7 @@ module.exports = {
             symbol: "DOMI",
             withFee: true,
         },
-        FpOFT: {
+        ForgottenPlaylandOFT: {
             name: "Forgotten Playland",
             symbol: "FP",
             withFee: true,
@@ -120,7 +120,7 @@ module.exports = {
             withFee: true,
             minGas: 10000000,
         },
-        FpProxyOFT: {
+        ForgottenPlaylandProxyOFT: {
             address: "0xEeee2A2E650697d2A8e8BC990C2f3d04203bE06f",
             withFee: true,
             minGas: 10000000,

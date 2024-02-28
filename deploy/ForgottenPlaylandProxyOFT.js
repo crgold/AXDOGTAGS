@@ -1,7 +1,7 @@
 const LZ_ENDPOINTS = require("../constants/layerzeroEndpoints.json")
 const TOKEN_CONFIG = require("../constants/tokenConfig")
 
-const CONTRACT_NAME = "FpOFT"
+const CONTRACT_NAME = "ForgottenPlaylandProxyOFT"
 
 module.exports = async function ({ deployments, getNamedAccounts }) {
     const { deploy } = deployments
@@ -17,8 +17,9 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
     }
 
     const tokenConfig = TOKEN_CONFIG[hre.network.name][CONTRACT_NAME]
-    if (!tokenConfig.name || !tokenConfig.symbol) {
-        console.error("No configuration found for target network.")
+
+    if (!tokenConfig.address) {
+        console.error("No configured token address found for target network.")
         return
     }
 
@@ -32,12 +33,7 @@ module.exports = async function ({ deployments, getNamedAccounts }) {
             execute: {
                 init: {
                     methodName: "initialize",
-                    args: [
-                        tokenConfig.name,
-                        tokenConfig.symbol,
-                        tokenConfig.sharedDecimals != null ? tokenConfig.sharedDecimals : 6,
-                        lzEndpointAddress,
-                    ],
+                    args: [tokenConfig.address, tokenConfig.sharedDecimals != null ? tokenConfig.sharedDecimals : 6, lzEndpointAddress],
                 },
             },
         },

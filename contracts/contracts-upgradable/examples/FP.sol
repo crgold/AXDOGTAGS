@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.18;
 
-import "../token/oft/v2/fee/OFTWithFeeUpgradeable.sol";
+import "../token/oft/v2/fee/OFTWithFeePermitUpgradeable.sol";
 import "../token/oft/v2/fee/ProxyOFTWithFeeUpgradeable.sol";
 
-contract FpOFT is OFTWithFeeUpgradeable {}
+contract ForgottenPlaylandOFT is OFTWithFeePermitUpgradeable {}
 
-contract FpProxyOFT is ProxyOFTWithFeeUpgradeable {}
+contract ForgottenPlaylandProxyOFT is ProxyOFTWithFeeUpgradeable {}

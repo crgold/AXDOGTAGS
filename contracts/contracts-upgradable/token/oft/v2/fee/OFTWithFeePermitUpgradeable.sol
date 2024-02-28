@@ -15,11 +15,16 @@ contract OFTWithFeePermitUpgradeable is Initializable, BaseOFTWithFeeUpgradeable
         _disableInitializers();
     }
 
-    function initialize(string memory _name, string memory _symbol, uint8 _sharedDecimals, address _lzEndpoint) public virtual initializer {
-        __OFTWithFeeUpgradeable_init(_name, _symbol, _sharedDecimals, _lzEndpoint);
+    function initialize(
+        string memory _name,
+        string memory _symbol,
+        uint8 _sharedDecimals,
+        address _lzEndpoint
+    ) public virtual initializer {
+        __OFTWithFeePermitUpgradeable_init(_name, _symbol, _sharedDecimals, _lzEndpoint);
     }
 
-    function __OFTWithFeeUpgradeable_init(
+    function __OFTWithFeePermitUpgradeable_init(
         string memory _name,
         string memory _symbol,
         uint8 _sharedDecimals,
@@ -32,13 +37,13 @@ contract OFTWithFeePermitUpgradeable is Initializable, BaseOFTWithFeeUpgradeable
         __ERC20_init_unchained(_name, _symbol);
         __ERC20Permit_init_unchained(_name);
 
-        __OFTWithFeeUpgradeable_init_unchained(_sharedDecimals);
+        __OFTWithFeePermitUpgradeable_init_unchained(_sharedDecimals);
     }
 
-    function __OFTWithFeeUpgradeable_init_unchained(uint8 _sharedDecimals) internal onlyInitializing {
+    function __OFTWithFeePermitUpgradeable_init_unchained(uint8 _sharedDecimals) internal onlyInitializing {
         uint8 decimals = decimals();
         require(_sharedDecimals <= decimals, "OFTWithFee: sharedDecimals must be <= decimals");
-        ld2sdRate = 10 ** (decimals - _sharedDecimals);
+        ld2sdRate = 10**(decimals - _sharedDecimals);
     }
 
     /************************************************************************
@@ -55,19 +60,32 @@ contract OFTWithFeePermitUpgradeable is Initializable, BaseOFTWithFeeUpgradeable
     /************************************************************************
      * internal functions
      ************************************************************************/
-    function _debitFrom(address _from, uint16, bytes32, uint _amount) internal virtual override returns (uint) {
+    function _debitFrom(
+        address _from,
+        uint16,
+        bytes32,
+        uint _amount
+    ) internal virtual override returns (uint) {
         address spender = _msgSender();
         if (_from != spender) _spendAllowance(_from, spender, _amount);
         _burn(_from, _amount);
         return _amount;
     }
 
-    function _creditTo(uint16, address _toAddress, uint _amount) internal virtual override returns (uint) {
+    function _creditTo(
+        uint16,
+        address _toAddress,
+        uint _amount
+    ) internal virtual override returns (uint) {
         _mint(_toAddress, _amount);
         return _amount;
     }
 
-    function _transferFrom(address _from, address _to, uint _amount) internal virtual override returns (uint) {
+    function _transferFrom(
+        address _from,
+        address _to,
+        uint _amount
+    ) internal virtual override returns (uint) {
         address spender = _msgSender();
         // if transfer from this contract, no need to check allowance
         if (_from != address(this) && _from != spender) _spendAllowance(_from, spender, _amount);
