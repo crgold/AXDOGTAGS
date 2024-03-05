@@ -8,9 +8,13 @@ module.exports = async function ({ localContract, remoteContract, targetNetwork,
     if (!minGas) {
         if (TOKEN_CONFIG[targetNetwork] && TOKEN_CONFIG[targetNetwork][remoteContract] && TOKEN_CONFIG[targetNetwork][remoteContract].minGas) {
             minGas = TOKEN_CONFIG[targetNetwork][remoteContract].minGas
+            console.log(`\nusing configured minGas of ${minGas} for ${targetNetwork}\n`)
         } else {
             minGas = targetNetwork.startsWith("beam") ? 10000000 : 100000
+            console.log(`\nusing default minGas of ${minGas} for ${targetNetwork}\n`)
         }
+    } else {
+        console.log(`\nusing passed minGas of ${minGas} for ${targetNetwork}\n`)
     }
 
     console.log("\nsetting trusted remote...\n")
@@ -23,7 +27,7 @@ module.exports = async function ({ localContract, remoteContract, targetNetwork,
         hre
     )
 
-    console.log(`\nsetting min gas to ${targetNetwork} to ${minGas}...\n`)
+    console.log(`\nsetting min gas for ${targetNetwork} to ${minGas}...\n`)
     await setMinDstGas(
         {
             contract: localContract,
