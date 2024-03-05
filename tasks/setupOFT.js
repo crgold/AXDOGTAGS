@@ -23,7 +23,7 @@ module.exports = async function ({ localContract, remoteContract, targetNetwork,
         hre
     )
 
-    console.log("\nsetting min gas...\n")
+    console.log(`\nsetting min gas to ${targetNetwork} to ${minGas}...\n`)
     await setMinDstGas(
         {
             contract: localContract,
