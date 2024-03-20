@@ -61,6 +61,8 @@ const apiKey = {
     "optimism-goerli": process.env.OPTIMISM_API_KEY || "",
     "arbitrum-goerli": process.env.ARBISCAN_API_KEY || "",
     arbitrum: process.env.ARBISCAN_API_KEY || "",
+    "imtbl-zkevm-testnet": "a",
+    "imtbl-zkevm": "a",
 }
 
 const apiUrl = {
@@ -79,6 +81,8 @@ const apiUrl = {
     "optimism-goerli": "https://api-goerli-optimistic.etherscan.io",
     arbitrum: "https://api.arbiscan.io",
     "arbitrum-goerli": "https://api-goerli.arbiscan.io",
+    "imtbl-zkevm-testnet": "https://explorer.testnet.immutable.com/api",
+    "imtbl-zkevm": "https://explorer.immutable.com/api",
 }
 
 // `hardhat-deploy etherscan-verify` network config
@@ -157,6 +161,11 @@ const networks = {
         chainId: 4337,
         accounts: accounts(),
     },
+    "imtbl-zkevm": {
+        url: "https://rpc.immutable.com",
+        chainId: 13371,
+        accounts: accounts(),
+    },
 
     // testnets
     goerli: {
@@ -210,6 +219,11 @@ const networks = {
     "beam-testnet": {
         url: "https://subnets.avax.network/beam/testnet/rpc",
         chainId: 13337,
+        accounts: accounts(),
+    },
+    "imtbl-zkevm-testnet": {
+        url: "https://rpc.testnet.immutable.com",
+        chainId: 13473,
         accounts: accounts(),
     },
 }
