@@ -30,7 +30,7 @@ The tables below are meant to help you to find the right contract type to base y
 
 ### Omnichain ERC20 tokens
 
-| Ominchain ERC20       | Token                    | Proxy                         | Native                         |
+| Omnichain ERC20       | Token                    | Proxy                         | Native                         |
 | :-------------------- | :----------------------- | :---------------------------- | :----------------------------- |
 | **Regular**           | OFTV2                    | ProxyOFTV2                    | NativeOFTV2                    |
 | **Upgradeable**       | OFTV2Upgradeable`*`      | ProxyOFTV2Upgradeable`*`      | NativeOFTV2Upgradeable`*`      |
@@ -39,7 +39,7 @@ The tables below are meant to help you to find the right contract type to base y
 
 ### Omnichain ERC721 NFTs
 
-| Ominchain ERC721 | Token              | Proxy                      |
+| Omnichain ERC721 | Token              | Proxy                      |
 | :--------------- | :----------------- | :------------------------- |
 | **Regular**      | ONFT721            | ProxyONFT721               |
 | **Upgradeable**  | ONFT721Upgradeable | ProxyONFT721Upgradeable`*` |
@@ -52,12 +52,12 @@ The tables below are meant to help you to find the right contract type to base y
 
 ### Omnichain ERC1155 NFTs
 
-| Ominchain ERC1155 | Token               | Proxy                       |
+| Omnichain ERC1155 | Token               | Proxy                       |
 | :---------------- | :------------------ | :-------------------------- |
 | **Regular**       | ONFT1155            | ProxyONFT1155               |
 | **Upgradeable**   | ONFT1155Upgradeable | ProxyONFT1155Upgradeable`*` |
 
-<br/>
+<br />
 
 ## Examples
 
@@ -231,7 +231,7 @@ npx hardhat --network fuji approveNFT --contract MyONFTProxy
 npx hardhat --network fuji sendONFT721 --target-network beam-testnet --token-id 1 --contract MyONFTProxy
 ```
 
-<br/>
+<br />
 
 ## Verify contracts
 
@@ -264,4 +264,4 @@ Currently, both Beam test- and mainnet connect to
 - Fantom
 - Arbitrum
 
-If your project requires interconnectivity with another network, [the Beam team](mailto:hello@onbeam.com) is happy to help!
+If your project requires interconnectivity with another network, [the Beam team](mailto:build@onbeam.com) is happy to help!
