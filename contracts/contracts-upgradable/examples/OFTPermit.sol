@@ -8,3 +8,7 @@ import "../token/oft/v2/fee/ProxyOFTWithFeeUpgradeable.sol";
 contract ForgottenPlaylandOFT is OFTWithFeePermitUpgradeable {}
 
 contract ForgottenPlaylandProxyOFT is ProxyOFTWithFeeUpgradeable {}
+
+contract CastleOfBlackwaterOFT is OFTWithFeePermitUpgradeable {}
+
+contract CastleOfBlackwaterProxyOFT is ProxyOFTWithFeeUpgradeable {}

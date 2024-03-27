@@ -142,6 +142,8 @@ The following command executes all necessary default setup for the contracts we'
 npx hardhat --network beam setupOFT --target-network ethereum --local-contract MyUsdcOFT --remote-contract MyUsdcProxyOFT
 # Ethereum
 npx hardhat --network ethereum setupOFT --target-network beam --local-contract MyUsdcProxyOFT --remote-contract MyUsdcOFT
+
+# important: add "--skip-adapter true" when _not_ using upgradeable contracts
 ```
 
 All done, let's test our bridge by transferring 20 USDC from Ethereum to Beam:

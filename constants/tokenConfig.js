@@ -17,7 +17,6 @@ module.exports = {
             symbol: "EH",
             baseUri: "https://ipfs.io/ipfs/QmbHSG2Y14wy2mSF7L57fzE4evv1BhTtUWtkzUaSnUsacB/",
             royaltyBasePoints: 500,
-            minGas: 100000,
         },
         UsdcOFT: {
             name: "USD Coin",
@@ -33,6 +32,7 @@ module.exports = {
             name: "Avalanche",
             symbol: "AVAX",
             withFee: true,
+            minGas: 10000000,
         },
         GobOFT: {
             name: "Goons of Balatroon",
@@ -49,6 +49,11 @@ module.exports = {
             symbol: "FP",
             withFee: true,
         },
+        CastleOfBlackwaterOFT: {
+            name: "Castle of Blackwater",
+            symbol: "COBE",
+            withFee: true,
+        },
     },
     "beam-testnet": {
         BeamNativeOFT: {
@@ -56,6 +61,7 @@ module.exports = {
             symbol: "LZBEAM",
             withFee: true,
             isNative: true,
+            minGas: 10000000,
         },
         NativeOFTWithFeeUpgradeable: {
             name: "LayerZero Wrapped Merit Circle",
@@ -73,7 +79,6 @@ module.exports = {
             symbol: "SNAKE",
             baseUri: "https://snake-on-a-chain-euppi.ondigitalocean.app/token/",
             royaltyBasePoints: 500,
-            minGas: 100000,
         },
         UsdcOFT: {
             name: "USD Coin",
@@ -95,7 +100,6 @@ module.exports = {
         BeamProxyOFT: {
             address: "0x62D0A8458eD7719FDAF978fe5929C6D342B0bFcE", // BEAM
             withFee: true,
-            minGas: 10000000,
         },
         ProxyOFTWithFeeUpgradeable: {
             address: "0x949D48EcA67b17269629c7194F4b727d4Ef9E5d6", // MC
@@ -103,44 +107,37 @@ module.exports = {
         },
         ProxyONFT721Upgradeable: {
             address: "0x9eEAeCBE2884AA7e82f450E3Fc174F30Fc2a8de3", // Edenhorde Eclipse
-            minGas: 10000000,
+            minGas: 100000,
         },
         UsdcProxyOFT: {
             address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", // USDC
             withFee: true,
-            minGas: 10000000,
         },
         UsdtProxyOFT: {
             address: "0xdac17f958d2ee523a2206206994597c13d831ec7", // USDT
             withFee: true,
-            minGas: 10000000,
         },
         DomiProxyOFT: {
             address: "0x45C2F8c9B4c0bDC76200448cc26C48ab6ffef83F",
             withFee: true,
-            minGas: 10000000,
         },
         ForgottenPlaylandProxyOFT: {
             address: "0xEeee2A2E650697d2A8e8BC990C2f3d04203bE06f",
             withFee: true,
-            minGas: 10000000,
+        },
+        CastleOfBlackwaterProxyOFT: {
+            address: "0xc61eDB127f58f42F47a8bE8aeBe83cF602A53878",
+            withFee: true,
         },
     },
     goerli: {
-        BeamProxyOFT: {
-            address: "TODO", // BEAM
-            withFee: true,
-            minGas: 10000000,
-        },
         UsdcProxyOFT: {
             address: "0x2724A590fe9cC7c66A83204aa11D6ec7Aa8e7C58", // USDC
             withFee: true,
-            minGas: 10000000,
         },
         UsdtProxyOFT: {
             address: "0x908C7A34a87FD8e207BC4585707E484Ed2c9E8aE", // USDT
             withFee: true,
-            minGas: 10000000,
         },
     },
     avalanche: {
@@ -149,7 +146,6 @@ module.exports = {
             symbol: "LZAVAX",
             withFee: true,
             isNative: true,
-            minGas: 10000000,
         },
         BeamOFT: {
             name: "Beam",
@@ -159,7 +155,6 @@ module.exports = {
         DomiProxyOFT: {
             address: "0xFc6Da929c031162841370af240dEc19099861d3B",
             withFee: true,
-            minGas: 10000000,
         },
     },
     fuji: {
@@ -169,14 +164,13 @@ module.exports = {
         },
         ProxyONFT721: {
             address: "0x588348d84498d0689B76F89438bE58999a5434EE", // Snakes on a chain
-            minGas: 10000000,
+            minGas: 100000,
         },
         AvaxNativeOFT: {
             name: "LayerZero Avalanche",
             symbol: "LZAVAX",
             withFee: true,
             isNative: true,
-            minGas: 10000000,
         },
         BeamOFT: {
             name: "Beam",
@@ -188,14 +182,12 @@ module.exports = {
         GobProxyOFT: {
             address: "0xa2f9ecf83a48b86265ff5fd36cdbaaa1f349916c", // USDT
             withFee: true,
-            minGas: 10000000,
         },
     },
     bsc: {
         DomiProxyOFT: {
             address: "0xBBCA42c60b5290F2c48871A596492F93fF0Ddc82",
             withFee: true,
-            minGas: 10000000,
         },
     },
 }
