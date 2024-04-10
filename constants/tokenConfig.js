@@ -54,6 +54,11 @@ module.exports = {
             symbol: "COBE",
             withFee: true,
         },
+        EthereumOFT: {
+            name: "Ethereum",
+            symbol: "ETH",
+            withFee: true,
+        },
     },
     "beam-testnet": {
         BeamNativeOFT: {
@@ -128,6 +133,12 @@ module.exports = {
         CastleOfBlackwaterProxyOFT: {
             address: "0xc61eDB127f58f42F47a8bE8aeBe83cF602A53878",
             withFee: true,
+        },
+        EthereumNativeOFT: {
+            name: "LayerZero Ethereum",
+            symbol: "LZETH",
+            withFee: true,
+            isNative: true,
         },
     },
     goerli: {
