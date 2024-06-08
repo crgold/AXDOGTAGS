@@ -1,4 +1,12 @@
 module.exports = {
+    "skale-testnet": {
+        AXDogTags: {
+            name: "ArmourX: Dog Tags",
+            symbol: "AXDT",
+            baseUri: "https://placeholder.com",
+            royaltyBasePoints: 700,
+        },
+    },
     beam: {
         BeamNativeOFT: {
             name: "LayerZero Beam",
@@ -61,6 +69,18 @@ module.exports = {
         },
     },
     "beam-testnet": {
+        AXBlueprints: {
+            baseUri: "https://placeholder.com",
+            royaltyBasePoints: 700,
+        },
+        AXCosmetics: {
+            baseUri: "https://placeholder.com",
+            royaltyBasePoints: 700,
+        },
+        AXEquipment: {
+            baseUri: "https://placeholder.com",
+            royaltyBasePoints: 700,
+        },
         BeamNativeOFT: {
             name: "LayerZero Beam",
             symbol: "LZBEAM",

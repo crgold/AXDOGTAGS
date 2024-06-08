@@ -18,6 +18,7 @@
     "arbitrum-goerli",
     "optimism-goerli",
     "fantom-testnet",
-    "beam-testnet"
+    "beam-testnet",
+    "skale-testnet"
   ]
 }

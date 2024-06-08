@@ -18,5 +18,6 @@
   "fantom-testnet": 10112,
   "meter-testnet": 10156,
   "zksync-testnet": 10165,
-  "beam-testnet": 10178
+  "beam-testnet": 10178,
+  "skale-testnet": 10254
 }

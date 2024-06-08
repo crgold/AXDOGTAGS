@@ -227,6 +227,11 @@ const networks = {
         chainId: 13473,
         accounts: accounts(),
     },
+    "skale-testnet": {
+        url: "https://testnet.skalenodes.com/v1/juicy-low-small-testnet",
+        chainId: 1444673419,
+        accounts: accounts(),
+    },
 }
 
 // You need to export an object to set up your config
